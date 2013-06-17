@@ -39,7 +39,7 @@
             this.pointDephtGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dephtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.gaugeProgressBar1 = new DbEdit.GaugeProgressBar();
+            this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -174,7 +174,7 @@
         private System.Windows.Forms.ToolStripMenuItem pointDephtGraphToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dephtToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private DbEdit.GaugeProgressBar gaugeProgressBar1;
+        private DephtInition.GaugeProgressBar gaugeProgressBar1;
     }
 }
 
