@@ -1,4 +1,4 @@
-﻿//Copyright 2013 Giancarlo Todone
+﻿//   Copyright 2013 Giancarlo Todone
 
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -12,10 +12,12 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
-// DephtInition allows to extract a 3d model from a 
-// focus stack (i.e. a number of pictures showing
-// the exact same scene exception made for the focus 
-// distance being slightly moved between shots)
+//          DephtInition allows to extract a 3d model from a 
+//          focus stack (i.e. a number of pictures showing
+//          the exact same scene exception made for the focus 
+//          distance being slightly moved between shots)
+
+//   for info: http://www.stareat.it/sp.aspx?g=3ce7bc36fb334b8d85e6900b0bdf11c3
 
 
 

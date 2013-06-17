@@ -1,4 +1,4 @@
-﻿//Copyright 2013 Giancarlo Todone
+﻿//   Copyright 2013 Giancarlo Todone 
 
 //   Licensed under the Apache License, Version 2.0 (the "License");
 //   you may not use this file except in compliance with the License.
@@ -11,6 +11,8 @@
 //   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
+
+//   for info: http://www.stareat.it/sp.aspx?g=3ce7bc36fb334b8d85e6900b0bdf11c3
 
 using System;
 using System.Collections.Generic;
