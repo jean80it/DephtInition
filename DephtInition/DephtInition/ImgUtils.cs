@@ -559,5 +559,36 @@ namespace DephtInition
             return 0.299f * r + 0.587f * g + 0.114f * b;
             //return (r + g + b) / 3.0f;
         }
+
+        public static FloatMap RemoveLonePixels(FloatMap imgfIn, float treshold)
+        {
+            int h = imgfIn.H;
+            int w = imgfIn.W;
+            int stride = imgfIn.Stride;
+
+            var imgfOut = new FloatMap(w, h);
+
+            const float k1 = 1;
+            const float k2 = 0.14644660940672623779957781894758f; // w = 1
+            const float k3 = 0.10355339059327376220042218105242f; // w = 1/sqrt(2)
+
+            int lineStart = stride;
+            for (int y = 1; y < h - 1; ++y)
+            {
+                int i = lineStart + 1; ;
+                for (int x = 1; x < w - 1; ++x)
+                {
+                    var d = Math.Abs((imgfIn[i]) -
+                                    (imgfIn[i + stride] + imgfIn[i - stride] + imgfIn[i + 1] + imgfIn[i - 1]) * k2 +
+                                    (imgfIn[i + stride + 1] + imgfIn[i + stride - 1] + imgfIn[i - stride + 1] + imgfIn[i - stride - 1]) * k3);
+
+                    imgfOut[i] = ((d > treshold) ? -1 : imgfOut[i]);
+
+                    ++i;
+                }
+                lineStart += stride;
+            }
+            return imgfOut;
+        }
     }
 }

@@ -424,6 +424,8 @@ namespace DephtInition
 
             _maxMap = getMaxMap();
 
+            ImgUtils.RemoveLonePixels(_maxMap, 1.0f);
+
             // SAVE PLY 
 
             int rw = _maxMap.W;
