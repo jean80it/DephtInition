@@ -560,6 +560,27 @@ namespace DephtInition
             //return (r + g + b) / 3.0f;
         }
 
+        public static float GetSpike(FloatMap imgfIn, int x, int y)
+        {
+            const float k1 = 1;
+            const float k2 = 0.14644660940672623779957781894758f; // w = 1
+            const float k3 = 0.10355339059327376220042218105242f; // w = 1/sqrt(2)
+
+            int h = imgfIn.H;
+            int w = imgfIn.W;
+            int stride = imgfIn.Stride;
+
+            int lineStart = y * stride;
+
+            int i = y * stride + x;
+                
+            var d = Math.Abs((imgfIn[i]) -
+                            ((imgfIn[i + stride] + imgfIn[i - stride] + imgfIn[i + 1] + imgfIn[i - 1]) * k2 +
+                            (imgfIn[i + stride + 1] + imgfIn[i + stride - 1] + imgfIn[i - stride + 1] + imgfIn[i - stride - 1]) * k3));
+
+            return d;
+        }
+
         public static FloatMap RemoveLonePixels(FloatMap imgfIn, float treshold)
         {
             int h = imgfIn.H;
@@ -579,8 +600,8 @@ namespace DephtInition
                 for (int x = 1; x < w - 1; ++x)
                 {
                     var d = Math.Abs((imgfIn[i]) -
-                                    (imgfIn[i + stride] + imgfIn[i - stride] + imgfIn[i + 1] + imgfIn[i - 1]) * k2 +
-                                    (imgfIn[i + stride + 1] + imgfIn[i + stride - 1] + imgfIn[i - stride + 1] + imgfIn[i - stride - 1]) * k3);
+                                    ((imgfIn[i + stride] + imgfIn[i - stride] + imgfIn[i + 1] + imgfIn[i - 1]) * k2 +
+                                    (imgfIn[i + stride + 1] + imgfIn[i + stride - 1] + imgfIn[i - stride + 1] + imgfIn[i - stride - 1]) * k3));
 
                     imgfOut[i] = ((d > treshold) ? -1 : imgfOut[i]);
 

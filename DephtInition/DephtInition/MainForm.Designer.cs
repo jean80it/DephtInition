@@ -39,8 +39,13 @@
             this.pointDephtGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dephtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.stackInterDistance = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
             this.menuStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.stackInterDistance)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -51,9 +56,9 @@
             // button1
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.button1.Location = new System.Drawing.Point(0, 24);
+            this.button1.Location = new System.Drawing.Point(0, 0);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 34);
+            this.button1.Size = new System.Drawing.Size(75, 40);
             this.button1.TabIndex = 0;
             this.button1.Text = "go";
             this.button1.UseVisualStyleBackColor = true;
@@ -66,7 +71,7 @@
             this.viewToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(284, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(388, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -132,22 +137,65 @@
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.gaugeProgressBar1);
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 124);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(388, 40);
+            this.panel1.TabIndex = 3;
+            // 
+            // stackInterDistance
+            // 
+            this.stackInterDistance.DecimalPlaces = 1;
+            this.stackInterDistance.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.stackInterDistance.Location = new System.Drawing.Point(174, 27);
+            this.stackInterDistance.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.stackInterDistance.Name = "stackInterDistance";
+            this.stackInterDistance.Size = new System.Drawing.Size(64, 20);
+            this.stackInterDistance.TabIndex = 4;
+            this.stackInterDistance.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 29);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(156, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "distance between pictures (mm)";
+            // 
             // gaugeProgressBar1
             // 
             this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gaugeProgressBar1.Label = "waiting";
-            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 24);
+            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
             this.gaugeProgressBar1.Name = "gaugeProgressBar1";
-            this.gaugeProgressBar1.Size = new System.Drawing.Size(209, 34);
+            this.gaugeProgressBar1.Size = new System.Drawing.Size(313, 40);
             this.gaugeProgressBar1.TabIndex = 2;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 58);
-            this.Controls.Add(this.gaugeProgressBar1);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(388, 164);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.stackInterDistance);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
@@ -156,6 +204,8 @@
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.stackInterDistance)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -175,6 +225,9 @@
         private System.Windows.Forms.ToolStripMenuItem dephtToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private DephtInition.GaugeProgressBar gaugeProgressBar1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.NumericUpDown stackInterDistance;
+        private System.Windows.Forms.Label label1;
     }
 }
 

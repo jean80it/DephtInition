@@ -52,15 +52,35 @@ namespace DephtInition
             _showRGBForm.pnlDisplayBitmap.MouseDown += new MouseEventHandler(pnlDisplayBitmap_MouseDown);
             _showContrForm.pnlDisplayBitmap.MouseDown += new MouseEventHandler(pnlDisplayBitmap_MouseDown);
 
+            _showDepthForm.pnlDisplayBitmap.MouseDown += new MouseEventHandler(checkSpikes);
+
             button1.Tag = false;
+        }
+
+        void checkSpikes(object sender, MouseEventArgs e)
+        {
+            var typedSender = sender as Control;
+
+            int w = _imgfs[0].W;
+            int h = _imgfs[0].H;
+
+            float xProp = (float)w / (float)typedSender.Width;
+            float yProp = (float)h / (float)typedSender.Height;
+
+            int x = (int)(e.X * xProp);
+            int y = (int)(e.Y * yProp);
+
+            Console.WriteLine("[{0},{1}] -> [{2},{3}]", e.X, e.Y, x, y);
+
+            Console.WriteLine("spike: {0}",ImgUtils.GetSpike(_maxMap, x, y));
         }
 
         void pnlDisplayBitmap_MouseDown(object sender, MouseEventArgs e)
         {
             var typedSender = sender as Control;
 
-            int w = imgfs[0].W;
-            int h = imgfs[0].H;
+            int w = _imgfs[0].W;
+            int h = _imgfs[0].H;
             
             float xProp = (float)w / (float)typedSender.Width;
             float yProp = (float)h / (float)typedSender.Height;
@@ -71,10 +91,10 @@ namespace DephtInition
             Console.WriteLine("[{0},{1}] -> [{2},{3}]", e.X, e.Y, x, y);
 
 
-            float[] vs = new float[imgfs.Count];
+            float[] vs = new float[_imgfs.Count];
 
             int i = 0;
-            foreach (var im in imgfs)
+            foreach (var im in _imgfs)
             {
                 vs[i] = im[x, y];
                 Console.WriteLine("{1} {0:0.0000}", im[x, y], i++);
@@ -126,20 +146,24 @@ namespace DephtInition
                 _showRGBForm.DisplayedBitmap = new Bitmap(_fileNames[_displayedBmpIdx]);
                 this.Text = string.Format("displaying image {0}/{1}", _displayedBmpIdx, _fileNames.Length - 1);
 
-                float max = ImgUtils.GetMax(imgfs[_displayedBmpIdx]);
-                _showContrForm.DisplayedBitmap = ImgUtils.FloatIntensity2Bmp(imgfs[_displayedBmpIdx], 255.0f / max);
+                float max = ImgUtils.GetMax(_imgfs[_displayedBmpIdx]);
+                _showContrForm.DisplayedBitmap = ImgUtils.FloatIntensity2Bmp(_imgfs[_displayedBmpIdx], 255.0f / max);
             }
         }
 
-        List<FloatMap> imgfs = new List<FloatMap>();
+        List<FloatMap> _imgfs = new List<FloatMap>();
 
         int _w = -1;
         int _h = -1;
+
+        float _stackInterDistance = 8;
 
         private void button1_Click(object sender, EventArgs e)
         {
             if ((bool)(button1.Tag) == false)
             {
+                _stackInterDistance = (float)stackInterDistance.Value;
+
                 button1.Text = "cancel";
                 button1.Tag = true;
                 backgroundWorker1.RunWorkerAsync();
@@ -179,11 +203,11 @@ namespace DephtInition
 
         float getMaxIdx(int x, int y)
         {
-            int l = imgfs.Count;
+            int l = _imgfs.Count;
             float[] vals = new float[l];
             for (int i = 0; i < l; ++i )
             {
-                vals[i] = imgfs[i][x, y];
+                vals[i] = _imgfs[i][x, y];
             }
 
             return getDist(vals);
@@ -191,8 +215,8 @@ namespace DephtInition
 
         FloatMap getMaxMap()
         {
-            int h = imgfs[0].H;
-            int w = imgfs[0].W;
+            int h = _imgfs[0].H;
+            int w = _imgfs[0].W;
 
             FloatMap imgfOut = new FloatMap(w, h);
 
@@ -201,7 +225,7 @@ namespace DephtInition
                 for (int x = 0; x < w; ++x )
                 {
                     float v = getMaxIdx(x, y);
-                    imgfOut[x, y] = v < 0 ? -1 : 255 - v * 255 / imgfs.Count;
+                    imgfOut[x, y] = v < 0 ? -1 : 255 - v * 255 / _imgfs.Count;
                 }            
             }
 
@@ -210,11 +234,11 @@ namespace DephtInition
 
         void smoothDepht()
         {
-            int h = imgfs[0].H;
-            int w = imgfs[0].W;
-            int stride = imgfs[0].Stride;
+            int h = _imgfs[0].H;
+            int w = _imgfs[0].W;
+            int stride = _imgfs[0].Stride;
             
-            int l = imgfs.Count;
+            int l = _imgfs.Count;
 
             for (int imgIdx = 1; imgIdx < l-1; ++imgIdx)
             {
@@ -224,7 +248,7 @@ namespace DephtInition
                     int i = lineStart;
                     for (int x = 0; x < w; ++x)
                     {
-                        imgfs[imgIdx][i] = imgfs[imgIdx][i] * 0.5f + (imgfs[imgIdx + 1][i] + imgfs[imgIdx - 1][i]) * 0.25f;
+                        _imgfs[imgIdx][i] = _imgfs[imgIdx][i] * 0.5f + (_imgfs[imgIdx + 1][i] + _imgfs[imgIdx - 1][i]) * 0.25f;
                         ++i;
                     }
                     lineStart += stride;
@@ -344,7 +368,7 @@ namespace DephtInition
                 return;
             }
 
-            imgfs.Clear();
+            _imgfs.Clear();
             
             int fileCount = _fileNames.Length;
 
@@ -381,7 +405,7 @@ namespace DephtInition
                     // get luminance map
                     imgf = ImgUtils.Bmp2floatIntensity(_bmp);
 
-                    imgfs.Add(imgf);
+                    _imgfs.Add(imgf);
                 }
 
                 // update and report progress
@@ -400,7 +424,7 @@ namespace DephtInition
             backgroundWorker1.ReportProgress((int)progress, "getting contrast");
 
             // for each luminance map
-            foreach (var imgf in imgfs)
+            foreach (var imgf in _imgfs)
             {
                 // get contrast, then shrink result (averaging pixels)
                 FloatMap newImgf = ImgUtils.HalfImg(ImgUtils.GetMultiResContrastEvaluation(imgf, 6), 5);
@@ -418,13 +442,13 @@ namespace DephtInition
                 }
             }
 
-            imgfs = newImgfs;
+            _imgfs = newImgfs;
 
             smoothDepht(); smoothDepht();
 
             _maxMap = getMaxMap();
 
-            ImgUtils.RemoveLonePixels(_maxMap, 1.0f);
+            ImgUtils.RemoveLonePixels(_maxMap, 30.0f); // the treshold seems high, but it's in the 0-255 range... have to rationalize this (and make it customizable)
 
             // SAVE PLY 
 
@@ -470,6 +494,11 @@ namespace DephtInition
                     sw.WriteLine("property uchar blue");
                     sw.WriteLine("end_header");
 
+                    float s = (float)Math.Max(rw, rh);
+                    float sx = -0.5f * s / (float)rw;
+                    float sy = -0.5f * s / (float)rh;
+                    float zk = _stackInterDistance / (_imgfs.Count * 2);
+
                     unsafe
                     {
                         // access bitmap data
@@ -488,9 +517,13 @@ namespace DephtInition
                                     byte g = dstRow[i + 1];
                                     byte r = dstRow[i + 2];
 
-                                    float pz = v * 0.25f;
-                                    float px = (x - 0.5f * rw);
-                                    float py = (y - 0.5f * rh);
+                                    // This is messy because distance between shots used to be hardcoded, 
+                                    // and v is normalized in the range from 0 to 255 (because of the "show depht form") 
+                                    // with -1 meaning "no data"
+                                    // Additionally, meshlab doesn't seem to like small scales
+                                    float pz = v * zk;
+                                    float px = (((float)x / s + sx) * 100.0f);
+                                    float py = (((float)y / s + sy) * 100.0f);
 
                                     // write point
                                     sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0:0.000} {1:0.000} {2:0.000} {3} {4} {5}", px, py, pz, r, g, b));
