@@ -593,6 +593,13 @@ namespace DephtInition
             const float k2 = 0.14644660940672623779957781894758f; // w = 1
             const float k3 = 0.10355339059327376220042218105242f; // w = 1/sqrt(2)
 
+            // TODO: fix border
+            //for (int y = 0; y < h; ++y)
+            //{
+            //    imgfOut[i] = imgfIn[i];
+            //    imgfOut[i] = imgfIn[i];
+            //}
+
             int lineStart = stride;
             for (int y = 1; y < h - 1; ++y)
             {
@@ -603,7 +610,7 @@ namespace DephtInition
                                     ((imgfIn[i + stride] + imgfIn[i - stride] + imgfIn[i + 1] + imgfIn[i - 1]) * k2 +
                                     (imgfIn[i + stride + 1] + imgfIn[i + stride - 1] + imgfIn[i - stride + 1] + imgfIn[i - stride - 1]) * k3));
 
-                    imgfOut[i] = ((d > treshold) ? -1 : imgfOut[i]);
+                    imgfOut[i] = ((d > treshold) ? -1 : imgfIn[i]);
 
                     ++i;
                 }

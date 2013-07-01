@@ -34,6 +34,8 @@ namespace DephtInition
 
         FloatMap _maxMap = null;
 
+        float _spikeFilterTreshold = 10.0f;
+
         public MainForm()
         {
             InitializeComponent();
@@ -162,7 +164,8 @@ namespace DephtInition
         {
             if ((bool)(button1.Tag) == false)
             {
-                _stackInterDistance = (float)stackInterDistance.Value;
+                _stackInterDistance = (float)updStackInterDistance.Value;
+                _spikeFilterTreshold = (float)updSpikeFilterTreshold.Value;
 
                 button1.Text = "cancel";
                 button1.Tag = true;
@@ -260,6 +263,11 @@ namespace DephtInition
 
         float getDist(float[] values)
         {
+            // this is basically trying to fit a parable
+            // to the points which focus rank is higher than average
+            // THIS IS A CHEAP TRICK soon to be substituted
+            // with RANSAC or RANSAC-like technique...
+
             try
             {
                 float min = 1000000;
@@ -448,7 +456,7 @@ namespace DephtInition
 
             _maxMap = getMaxMap();
 
-            ImgUtils.RemoveLonePixels(_maxMap, 30.0f); // the treshold seems high, but it's in the 0-255 range... have to rationalize this (and make it customizable)
+            _maxMap = ImgUtils.RemoveLonePixels(_maxMap, _spikeFilterTreshold); // the treshold seems high, but it's in the 0-255 range... have to rationalize this (and make it customizable)
 
             // SAVE PLY 
 

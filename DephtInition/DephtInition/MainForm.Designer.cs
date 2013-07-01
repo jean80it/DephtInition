@@ -40,12 +40,15 @@
             this.dephtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.stackInterDistance = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
             this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
+            this.updStackInterDistance = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.updSpikeFilterTreshold = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.stackInterDistance)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updStackInterDistance)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updSpikeFilterTreshold)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -147,24 +150,33 @@
             this.panel1.Size = new System.Drawing.Size(388, 40);
             this.panel1.TabIndex = 3;
             // 
-            // stackInterDistance
+            // gaugeProgressBar1
             // 
-            this.stackInterDistance.DecimalPlaces = 1;
-            this.stackInterDistance.Increment = new decimal(new int[] {
+            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gaugeProgressBar1.Label = "waiting";
+            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
+            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
+            this.gaugeProgressBar1.Size = new System.Drawing.Size(313, 40);
+            this.gaugeProgressBar1.TabIndex = 2;
+            // 
+            // updStackInterDistance
+            // 
+            this.updStackInterDistance.DecimalPlaces = 1;
+            this.updStackInterDistance.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.stackInterDistance.Location = new System.Drawing.Point(174, 27);
-            this.stackInterDistance.Minimum = new decimal(new int[] {
+            this.updStackInterDistance.Location = new System.Drawing.Point(174, 27);
+            this.updStackInterDistance.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.stackInterDistance.Name = "stackInterDistance";
-            this.stackInterDistance.Size = new System.Drawing.Size(64, 20);
-            this.stackInterDistance.TabIndex = 4;
-            this.stackInterDistance.Value = new decimal(new int[] {
+            this.updStackInterDistance.Name = "updStackInterDistance";
+            this.updStackInterDistance.Size = new System.Drawing.Size(64, 20);
+            this.updStackInterDistance.TabIndex = 4;
+            this.updStackInterDistance.Value = new decimal(new int[] {
             8,
             0,
             0,
@@ -179,22 +191,47 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "distance between pictures (mm)";
             // 
-            // gaugeProgressBar1
+            // label2
             // 
-            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gaugeProgressBar1.Label = "waiting";
-            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
-            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
-            this.gaugeProgressBar1.Size = new System.Drawing.Size(313, 40);
-            this.gaugeProgressBar1.TabIndex = 2;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 55);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(135, 13);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "spikes filter treshold (0-255)";
+            // 
+            // updSpikeFilterTreshold
+            // 
+            this.updSpikeFilterTreshold.DecimalPlaces = 1;
+            this.updSpikeFilterTreshold.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.updSpikeFilterTreshold.Location = new System.Drawing.Point(174, 53);
+            this.updSpikeFilterTreshold.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.updSpikeFilterTreshold.Name = "updSpikeFilterTreshold";
+            this.updSpikeFilterTreshold.Size = new System.Drawing.Size(64, 20);
+            this.updSpikeFilterTreshold.TabIndex = 6;
+            this.updSpikeFilterTreshold.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(388, 164);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.updSpikeFilterTreshold);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.stackInterDistance);
+            this.Controls.Add(this.updStackInterDistance);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.KeyPreview = true;
@@ -205,7 +242,8 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.stackInterDistance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updStackInterDistance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updSpikeFilterTreshold)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -226,8 +264,10 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private DephtInition.GaugeProgressBar gaugeProgressBar1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.NumericUpDown stackInterDistance;
+        private System.Windows.Forms.NumericUpDown updStackInterDistance;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown updSpikeFilterTreshold;
     }
 }
 
