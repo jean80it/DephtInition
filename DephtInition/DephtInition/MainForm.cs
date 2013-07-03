@@ -36,6 +36,8 @@ namespace DephtInition
 
         float _spikeFilterTreshold = 10.0f;
 
+        int _multiResSteps = 3;
+
         public MainForm()
         {
             InitializeComponent();
@@ -56,7 +58,7 @@ namespace DephtInition
 
             _showDepthForm.pnlDisplayBitmap.MouseDown += new MouseEventHandler(checkSpikes);
 
-            button1.Tag = false;
+            btnGo.Tag = false;
         }
 
         void checkSpikes(object sender, MouseEventArgs e)
@@ -74,7 +76,7 @@ namespace DephtInition
 
             Console.WriteLine("[{0},{1}] -> [{2},{3}]", e.X, e.Y, x, y);
 
-            Console.WriteLine("spike: {0}",ImgUtils.GetSpike(_maxMap, x, y));
+            Console.WriteLine("spike: {0}",MapUtils.GetSpikeHeight(_maxMap, x, y));
         }
 
         void pnlDisplayBitmap_MouseDown(object sender, MouseEventArgs e)
@@ -148,8 +150,8 @@ namespace DephtInition
                 _showRGBForm.DisplayedBitmap = new Bitmap(_fileNames[_displayedBmpIdx]);
                 this.Text = string.Format("displaying image {0}/{1}", _displayedBmpIdx, _fileNames.Length - 1);
 
-                float max = ImgUtils.GetMax(_imgfs[_displayedBmpIdx]);
-                _showContrForm.DisplayedBitmap = ImgUtils.FloatIntensity2Bmp(_imgfs[_displayedBmpIdx], 255.0f / max);
+                float max = MapUtils.GetMapMax(_imgfs[_displayedBmpIdx]);
+                _showContrForm.DisplayedBitmap = MapUtils.Map2Bmp(_imgfs[_displayedBmpIdx], 255.0f / max);
             }
         }
 
@@ -160,21 +162,22 @@ namespace DephtInition
 
         float _stackInterDistance = 8;
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnGo_Click(object sender, EventArgs e)
         {
-            if ((bool)(button1.Tag) == false)
+            if ((bool)(btnGo.Tag) == false)
             {
                 _stackInterDistance = (float)updStackInterDistance.Value;
                 _spikeFilterTreshold = (float)updSpikeFilterTreshold.Value;
+                _multiResSteps = (int)updMultiResSteps.Value;
 
-                button1.Text = "cancel";
-                button1.Tag = true;
+                btnGo.Text = "cancel";
+                btnGo.Tag = true;
                 backgroundWorker1.RunWorkerAsync();
             }
             else
             {
-                button1.Text = "go";
-                button1.Tag = false;
+                btnGo.Text = "go";
+                btnGo.Tag = false;
                 backgroundWorker1.CancelAsync();
             }
         }
@@ -202,7 +205,6 @@ namespace DephtInition
             }
             return result;
         }
-
 
         float getMaxIdx(int x, int y)
         {
@@ -371,6 +373,8 @@ namespace DephtInition
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
+            // TODO: correct the bell-distorsion
+
             if ((_fileNames == null) || (_fileNames.Length <= 3))
             {
                 return;
@@ -383,7 +387,7 @@ namespace DephtInition
             float progressStep = 100.0f / (fileCount * 2.0f);
             float progress = 0;
 
-            backgroundWorker1.ReportProgress((int)progress,"loading");
+            backgroundWorker1.ReportProgress((int)progress,"converting");
 
             // for each selected file 
             for (int fileIdx = 0; fileIdx < fileCount; ++fileIdx)
@@ -411,7 +415,7 @@ namespace DephtInition
                     FloatMap imgf;
 
                     // get luminance map
-                    imgf = ImgUtils.Bmp2floatIntensity(_bmp);
+                    imgf = MapUtils.HalfMap(MapUtils.Bmp2Map(_bmp));
 
                     _imgfs.Add(imgf);
                 }
@@ -435,7 +439,7 @@ namespace DephtInition
             foreach (var imgf in _imgfs)
             {
                 // get contrast, then shrink result (averaging pixels)
-                FloatMap newImgf = ImgUtils.HalfImg(ImgUtils.GetMultiResContrastEvaluation(imgf, 6), 5);
+                FloatMap newImgf = MapUtils.HalfMap(MapUtils.GetMultiResContrastEvaluation(imgf, 2), 5);
 
                 newImgfs.Add(newImgf);
 
@@ -456,7 +460,7 @@ namespace DephtInition
 
             _maxMap = getMaxMap();
 
-            _maxMap = ImgUtils.RemoveLonePixels(_maxMap, _spikeFilterTreshold); // the treshold seems high, but it's in the 0-255 range... have to rationalize this (and make it customizable)
+            _maxMap = MapUtils.SpikesFilter(_maxMap, _spikeFilterTreshold);
 
             // SAVE PLY 
 
@@ -558,9 +562,9 @@ namespace DephtInition
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            button1.Enabled = true;
-            button1.Text = "go";
-            button1.Tag = false;
+            btnGo.Enabled = true;
+            btnGo.Text = "go";
+            btnGo.Tag = false;
             
             if (gaugeProgressBar1.Value == 0)
             {
@@ -579,7 +583,7 @@ namespace DephtInition
                 try
                 {
                     DisplayedBmpIdx = 0;
-                    _showDepthForm.DisplayedBitmap = ImgUtils.FloatIntensity2Bmp_(_maxMap, 1);
+                    _showDepthForm.DisplayedBitmap = MapUtils.Map2BmpDephtMap(_maxMap, 1);
                 }
                 catch { }
                 gaugeProgressBar1.Label = "done";

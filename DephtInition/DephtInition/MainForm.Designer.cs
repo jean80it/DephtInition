@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnGo = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,16 +39,27 @@
             this.pointDephtGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dephtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlBottom = new System.Windows.Forms.Panel();
             this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
             this.updStackInterDistance = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.updSpikeFilterTreshold = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.updMultiResSteps = new System.Windows.Forms.NumericUpDown();
+            this.pnlOptions = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.pnlBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updStackInterDistance)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.updSpikeFilterTreshold)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updMultiResSteps)).BeginInit();
+            this.pnlOptions.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -56,16 +67,16 @@
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.Multiselect = true;
             // 
-            // button1
+            // btnGo
             // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.button1.Location = new System.Drawing.Point(0, 0);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 40);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "go";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnGo.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnGo.Location = new System.Drawing.Point(0, 0);
+            this.btnGo.Name = "btnGo";
+            this.btnGo.Size = new System.Drawing.Size(75, 27);
+            this.btnGo.TabIndex = 0;
+            this.btnGo.Text = "go";
+            this.btnGo.UseVisualStyleBackColor = true;
+            this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
             // 
             // menuStrip1
             // 
@@ -74,7 +85,7 @@
             this.viewToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(388, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(334, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -140,15 +151,15 @@
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
-            // panel1
+            // pnlBottom
             // 
-            this.panel1.Controls.Add(this.gaugeProgressBar1);
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 124);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(388, 40);
-            this.panel1.TabIndex = 3;
+            this.pnlBottom.Controls.Add(this.gaugeProgressBar1);
+            this.pnlBottom.Controls.Add(this.btnGo);
+            this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlBottom.Location = new System.Drawing.Point(0, 162);
+            this.pnlBottom.Name = "pnlBottom";
+            this.pnlBottom.Size = new System.Drawing.Size(334, 27);
+            this.pnlBottom.TabIndex = 3;
             // 
             // gaugeProgressBar1
             // 
@@ -156,18 +167,19 @@
             this.gaugeProgressBar1.Label = "waiting";
             this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
             this.gaugeProgressBar1.Name = "gaugeProgressBar1";
-            this.gaugeProgressBar1.Size = new System.Drawing.Size(313, 40);
+            this.gaugeProgressBar1.Size = new System.Drawing.Size(259, 27);
             this.gaugeProgressBar1.TabIndex = 2;
             // 
             // updStackInterDistance
             // 
             this.updStackInterDistance.DecimalPlaces = 1;
+            this.updStackInterDistance.Dock = System.Windows.Forms.DockStyle.Right;
             this.updStackInterDistance.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.updStackInterDistance.Location = new System.Drawing.Point(174, 27);
+            this.updStackInterDistance.Location = new System.Drawing.Point(261, 3);
             this.updStackInterDistance.Minimum = new decimal(new int[] {
             1,
             0,
@@ -184,31 +196,34 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 29);
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Location = new System.Drawing.Point(3, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(156, 13);
+            this.label1.Size = new System.Drawing.Size(258, 24);
             this.label1.TabIndex = 5;
             this.label1.Text = "distance between pictures (mm)";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 55);
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Location = new System.Drawing.Point(3, 3);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(135, 13);
+            this.label2.Size = new System.Drawing.Size(258, 24);
             this.label2.TabIndex = 7;
             this.label2.Text = "spikes filter treshold (0-255)";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // updSpikeFilterTreshold
             // 
             this.updSpikeFilterTreshold.DecimalPlaces = 1;
+            this.updSpikeFilterTreshold.Dock = System.Windows.Forms.DockStyle.Right;
             this.updSpikeFilterTreshold.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.updSpikeFilterTreshold.Location = new System.Drawing.Point(174, 53);
+            this.updSpikeFilterTreshold.Location = new System.Drawing.Point(261, 3);
             this.updSpikeFilterTreshold.Maximum = new decimal(new int[] {
             255,
             0,
@@ -223,27 +238,103 @@
             0,
             0});
             // 
+            // label3
+            // 
+            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label3.Location = new System.Drawing.Point(3, 3);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(258, 24);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "multiresolution steps (1-10)";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updMultiResSteps
+            // 
+            this.updMultiResSteps.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updMultiResSteps.Location = new System.Drawing.Point(261, 3);
+            this.updMultiResSteps.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.updMultiResSteps.Name = "updMultiResSteps";
+            this.updMultiResSteps.Size = new System.Drawing.Size(64, 20);
+            this.updMultiResSteps.TabIndex = 8;
+            this.updMultiResSteps.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            // 
+            // pnlOptions
+            // 
+            this.pnlOptions.Controls.Add(this.panel3);
+            this.pnlOptions.Controls.Add(this.panel2);
+            this.pnlOptions.Controls.Add(this.panel1);
+            this.pnlOptions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlOptions.Location = new System.Drawing.Point(0, 24);
+            this.pnlOptions.Name = "pnlOptions";
+            this.pnlOptions.Padding = new System.Windows.Forms.Padding(3);
+            this.pnlOptions.Size = new System.Drawing.Size(334, 138);
+            this.pnlOptions.TabIndex = 10;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.label3);
+            this.panel3.Controls.Add(this.updMultiResSteps);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(3, 63);
+            this.panel3.Name = "panel3";
+            this.panel3.Padding = new System.Windows.Forms.Padding(3);
+            this.panel3.Size = new System.Drawing.Size(328, 30);
+            this.panel3.TabIndex = 2;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.label2);
+            this.panel2.Controls.Add(this.updSpikeFilterTreshold);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(3, 33);
+            this.panel2.Name = "panel2";
+            this.panel2.Padding = new System.Windows.Forms.Padding(3);
+            this.panel2.Size = new System.Drawing.Size(328, 30);
+            this.panel2.TabIndex = 1;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.updStackInterDistance);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Padding = new System.Windows.Forms.Padding(3);
+            this.panel1.Size = new System.Drawing.Size(328, 30);
+            this.panel1.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(388, 164);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.updSpikeFilterTreshold);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.updStackInterDistance);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(334, 189);
+            this.Controls.Add(this.pnlOptions);
+            this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.menuStrip1);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(270, 176);
             this.Name = "MainForm";
             this.Text = "DephtInition";
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.panel1.ResumeLayout(false);
+            this.pnlBottom.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.updStackInterDistance)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.updSpikeFilterTreshold)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.updMultiResSteps)).EndInit();
+            this.pnlOptions.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -252,7 +343,7 @@
         #endregion
 
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnGo;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
@@ -263,11 +354,17 @@
         private System.Windows.Forms.ToolStripMenuItem dephtToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private DephtInition.GaugeProgressBar gaugeProgressBar1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlBottom;
         private System.Windows.Forms.NumericUpDown updStackInterDistance;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown updSpikeFilterTreshold;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown updMultiResSteps;
+        private System.Windows.Forms.Panel pnlOptions;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 
