@@ -245,7 +245,7 @@ namespace DephtInition
             }
         }
 
-        // Seturns maximum value in a map;
+        // Returns maximum value in a map;
         // used to show normalized bitmaps
         public static float GetMapMax(FloatMap imgfIn) 
         {
@@ -254,7 +254,8 @@ namespace DephtInition
             int stride = imgfIn.Stride;
 
             float max = float.MinValue;
-
+            float min = float.MaxValue;
+            
             int lineStart = 0;
             for (int y = 0; y < h; ++y)
             {
@@ -266,10 +267,19 @@ namespace DephtInition
                     {
                         max = v;
                     }
+                    
+                    // debug only
+                    if ((v > 0) && (v < min))
+                    {
+                        min = v;
+                    }
+
                     i += 1;
                 }
                 lineStart += stride;
             }
+
+            Console.WriteLine("\n\nmin: {0}\nmax: {1}\n\n", min, max);
 
             return max;
         }
@@ -581,6 +591,7 @@ namespace DephtInition
         // This is some sort of median filter, with the difference that
         // strange values are just invalidated and left
         // for another step to be replaced with appropriate value
+        // (this additional interpolation step still doesn't exist, though)
         public static FloatMap SpikesFilter(FloatMap imgfIn, float treshold)
         {
             int h = imgfIn.H;
@@ -589,9 +600,7 @@ namespace DephtInition
 
             var imgfOut = new FloatMap(w, h);
 
-            const float k1 = 1; // lazy me, i just compied result of w/wtot from calc... i know we don't have that much detail in singles
-            const float k2 = 0.14644660940672623779957781894758f; // w = 1
-            const float k3 = 0.10355339059327376220042218105242f; // w = 1/sqrt(2)
+            const float k = 0.70710678118654752440084436210485f; // w = 1/sqrt(2); lazy me, i just compied result of w/wtot from calc... i know we don't have that much detail in singles
 
             // TODO: Should handle -1s correctly here, sooner or later XD
 
@@ -616,15 +625,77 @@ namespace DephtInition
             // of its neighborhood (weighted proportionally to distance
             // from center pixel): if |value-average|>treshold
             // pixel is invalidated (=-1)
+            float neighborhoodWeight;
+            float neighborhoodAccu;
+            float v;
             int lineStart = stride;
             for (int y = 1; y < h - 1; ++y)
             {
                 int i = lineStart + 1; ;
                 for (int x = 1; x < w - 1; ++x)
                 {
-                    var d = Math.Abs((imgfIn[i]) *k1 -
-                                    ((imgfIn[i + stride] + imgfIn[i - stride] + imgfIn[i + 1] + imgfIn[i - 1]) * k2 +
-                                    (imgfIn[i + stride + 1] + imgfIn[i + stride - 1] + imgfIn[i - stride + 1] + imgfIn[i - stride - 1]) * k3));
+                    neighborhoodWeight = 0; 
+                    neighborhoodAccu = 0;
+
+                    // considering neighborhood pixels separately to correctly handle -1s
+
+                    v = imgfIn[i + stride];
+                    if (v > 0)
+                    {
+                        neighborhoodAccu += v;
+                        neighborhoodWeight += 1;
+                    }
+
+                    v = imgfIn[i - stride];
+                    if (v > 0)
+                    {
+                        neighborhoodAccu += v;
+                        neighborhoodWeight += 1;
+                    }
+
+                    v = imgfIn[i + 1];
+                    if (v > 0)
+                    {
+                        neighborhoodAccu += v;
+                        neighborhoodWeight += 1;
+                    }
+
+                    v = imgfIn[i -1];
+                    if (v > 0)
+                    {
+                        neighborhoodAccu += v;
+                        neighborhoodWeight += 1;
+                    }
+
+                    v = imgfIn[i + stride + 1];
+                    if (v > 0)
+                    {
+                        neighborhoodAccu += v * k;
+                        neighborhoodWeight += k;
+                    }
+                    
+                    v = imgfIn[i + stride -1];
+                    if (v > 0)
+                    {
+                        neighborhoodAccu += v * k;
+                        neighborhoodWeight += k;
+                    }
+                    
+                    v = imgfIn[i - stride + 1];
+                    if (v > 0)
+                    {
+                        neighborhoodAccu += v * k;
+                        neighborhoodWeight += k;
+                    }
+
+                    v = imgfIn[i - stride - 1];
+                    if (v > 0)
+                    {
+                        neighborhoodAccu += v * k;
+                        neighborhoodWeight += k;
+                    }
+
+                    var d = Math.Abs(imgfIn[i] - (neighborhoodAccu / neighborhoodWeight));
 
                     imgfOut[i] = ((d > treshold) ? -1 : imgfIn[i]); // pixel value is just invalidated. A further step will take care of interpolation for missing value
 
@@ -642,9 +713,7 @@ namespace DephtInition
         // for performance reasons, too
         public static float GetSpikeHeight(FloatMap imgfIn, int x, int y)
         {
-            const float k1 = 1; // lazy me, i just compied result of w/wtot from calc... i know we don't have that much detail in singles
-            const float k2 = 0.14644660940672623779957781894758f; // w = 1
-            const float k3 = 0.10355339059327376220042218105242f; // w = 1/sqrt(2)
+            const float k = 0.70710678118654752440084436210485f; // w = 1/sqrt(2); lazy me, i just compied result of w/wtot from calc... i know we don't have that much detail in singles
 
             int h = imgfIn.H;
             int w = imgfIn.W;
@@ -654,9 +723,69 @@ namespace DephtInition
 
             int i = y * stride + x;
 
-            var d = Math.Abs((imgfIn[i] * k1) -
-                            ((imgfIn[i + stride] + imgfIn[i - stride] + imgfIn[i + 1] + imgfIn[i - 1]) * k2 +
-                            (imgfIn[i + stride + 1] + imgfIn[i + stride - 1] + imgfIn[i - stride + 1] + imgfIn[i - stride - 1]) * k3));
+            
+            float neighborhoodWeight = 0;
+            float neighborhoodAccu = 0;
+            float v;
+            // considering neighborhood pixels separately to correctly handle -1s
+
+            v = imgfIn[i + stride];
+            if (v > 0)
+            {
+                neighborhoodAccu += v;
+                neighborhoodWeight += 1;
+            }
+
+            v = imgfIn[i - stride];
+            if (v > 0)
+            {
+                neighborhoodAccu += v;
+                neighborhoodWeight += 1;
+            }
+
+            v = imgfIn[i + 1];
+            if (v > 0)
+            {
+                neighborhoodAccu += v;
+                neighborhoodWeight += 1;
+            }
+
+            v = imgfIn[i - 1];
+            if (v > 0)
+            {
+                neighborhoodAccu += v;
+                neighborhoodWeight += 1;
+            }
+
+            v = imgfIn[i + stride + 1];
+            if (v > 0)
+            {
+                neighborhoodAccu += v * k;
+                neighborhoodWeight += k;
+            }
+
+            v = imgfIn[i + stride - 1];
+            if (v > 0)
+            {
+                neighborhoodAccu += v * k;
+                neighborhoodWeight += k;
+            }
+
+            v = imgfIn[i - stride + 1];
+            if (v > 0)
+            {
+                neighborhoodAccu += v * k;
+                neighborhoodWeight += k;
+            }
+
+            v = imgfIn[i - stride - 1];
+            if (v > 0)
+            {
+                neighborhoodAccu += v * k;
+                neighborhoodWeight += k;
+            }
+
+            var d = Math.Abs(imgfIn[i] - (neighborhoodAccu / neighborhoodWeight));
 
             return d;
         }

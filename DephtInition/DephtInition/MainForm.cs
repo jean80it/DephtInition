@@ -38,6 +38,8 @@ namespace DephtInition
 
         int _multiResSteps = 3;
 
+        float _curveReliabilityTreshold = 0.3f;
+
         public MainForm()
         {
             InitializeComponent();
@@ -169,6 +171,7 @@ namespace DephtInition
                 _stackInterDistance = (float)updStackInterDistance.Value;
                 _spikeFilterTreshold = (float)updSpikeFilterTreshold.Value;
                 _multiResSteps = (int)updMultiResSteps.Value;
+                _curveReliabilityTreshold = (float)updCurveReliabilityTreshold.Value;
 
                 btnGo.Text = "cancel";
                 btnGo.Tag = true;
@@ -327,10 +330,14 @@ namespace DephtInition
                 //    return -1;
                 //}
 
-                // TODO: |max-average|<e
+                if (max - average < _curveReliabilityTreshold)
+                {
+                    return -1;
+                }
 
                 // -b / 2a 
-                return (float)(-fittedParamsTemp[1] / (2 * fittedParamsTemp[2]));
+                float res = (float)(-fittedParamsTemp[1] / (2 * fittedParamsTemp[2]));
+                return (res >= l) || (res <= 0) ? -1 : res;
             }
             catch { return -1; }
         }
@@ -509,8 +516,8 @@ namespace DephtInition
                     float s = (float)Math.Max(rw, rh);
                     float xOffs = -0.5f * s / (float)rw;
                     float yOffs = -0.5f * s / (float)rh;
-                    float zk = -_stackInterDistance * 5;
-                    float zOffs = -_stackInterDistance * (float)(_imgfs.Count) * 5;
+                    float zk = -_stackInterDistance;
+                    float zOffs = _stackInterDistance * (float)(_imgfs.Count) * 0.5f;
 
                     unsafe
                     {
@@ -531,8 +538,8 @@ namespace DephtInition
                                     byte r = dstRow[i + 2];
 
                                     float pz = v * zk + zOffs;
-                                    float px = (((float)x / s + xOffs) * 2000.0f); // TODO: fix once an for all conversions between virtual units and real world ones
-                                    float py = (((float)y / s + yOffs) * 2000.0f);
+                                    float px = (((float)x / s + xOffs) * 400.0f); // TODO: fix once an for all conversions between virtual units and real world ones
+                                    float py = (((float)y / s + yOffs) * 400.0f);
 
                                     // write point
                                     sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0:0.000} {1:0.000} {2:0.000} {3} {4} {5}", px, py, pz, r, g, b));
