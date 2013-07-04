@@ -34,7 +34,7 @@ namespace DephtInition
 
         FloatMap _maxMap = null;
 
-        float _spikeFilterTreshold = 10.0f;
+        float _spikeFilterTreshold = 2.0f;
 
         int _multiResSteps = 3;
 
@@ -230,7 +230,7 @@ namespace DephtInition
                 for (int x = 0; x < w; ++x )
                 {
                     float v = getMaxIdx(x, y);
-                    imgfOut[x, y] = v < 0 ? -1 : 255 - v * 255 / _imgfs.Count;
+                    imgfOut[x, y] = v;// < 0 ? -1 : 255 - v * 255 / _imgfs.Count; // MOVED into map2BmpDepht
                 }            
             }
 
@@ -416,7 +416,7 @@ namespace DephtInition
 
                     // get luminance map
                     imgf = MapUtils.HalfMap(MapUtils.Bmp2Map(_bmp));
-
+                    
                     _imgfs.Add(imgf);
                 }
 
@@ -439,7 +439,7 @@ namespace DephtInition
             foreach (var imgf in _imgfs)
             {
                 // get contrast, then shrink result (averaging pixels)
-                FloatMap newImgf = MapUtils.HalfMap(MapUtils.GetMultiResContrastEvaluation(imgf, 2), 5);
+                FloatMap newImgf = MapUtils.HalfMap(MapUtils.GetMultiResContrastEvaluation(imgf, 2), 4);
 
                 newImgfs.Add(newImgf);
 
@@ -507,9 +507,10 @@ namespace DephtInition
                     sw.WriteLine("end_header");
 
                     float s = (float)Math.Max(rw, rh);
-                    float sx = -0.5f * s / (float)rw;
-                    float sy = -0.5f * s / (float)rh;
-                    float zk = _stackInterDistance / (_imgfs.Count * 2);
+                    float xOffs = -0.5f * s / (float)rw;
+                    float yOffs = -0.5f * s / (float)rh;
+                    float zk = -_stackInterDistance * 5;
+                    float zOffs = -_stackInterDistance * (float)(_imgfs.Count) * 5;
 
                     unsafe
                     {
@@ -529,13 +530,9 @@ namespace DephtInition
                                     byte g = dstRow[i + 1];
                                     byte r = dstRow[i + 2];
 
-                                    // This is messy because distance between shots used to be hardcoded, 
-                                    // and v is normalized in the range from 0 to 255 (because of the "show depht form") 
-                                    // with -1 meaning "no data"
-                                    // Additionally, meshlab doesn't seem to like small scales
-                                    float pz = v * zk;
-                                    float px = (((float)x / s + sx) * 100.0f);
-                                    float py = (((float)y / s + sy) * 100.0f);
+                                    float pz = v * zk + zOffs;
+                                    float px = (((float)x / s + xOffs) * 2000.0f); // TODO: fix once an for all conversions between virtual units and real world ones
+                                    float py = (((float)y / s + yOffs) * 2000.0f);
 
                                     // write point
                                     sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0:0.000} {1:0.000} {2:0.000} {3} {4} {5}", px, py, pz, r, g, b));
@@ -583,7 +580,7 @@ namespace DephtInition
                 try
                 {
                     DisplayedBmpIdx = 0;
-                    _showDepthForm.DisplayedBitmap = MapUtils.Map2BmpDephtMap(_maxMap, 1);
+                    _showDepthForm.DisplayedBitmap = MapUtils.Map2BmpDephtMap(_maxMap, 1, _imgfs.Count);
                 }
                 catch { }
                 gaugeProgressBar1.Label = "done";

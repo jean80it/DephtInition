@@ -520,7 +520,7 @@ namespace DephtInition
         }
 
         // Creates the blue-red depht map
-        public static Bitmap Map2BmpDephtMap(FloatMap imgf, float k)
+        public static Bitmap Map2BmpDephtMap(FloatMap imgf, float k, int count)
         {
             int h = imgf.H;
             int w = imgf.W;
@@ -544,6 +544,8 @@ namespace DephtInition
                     for (int x = 0; x < wb; x+=4)
                     {
                         float v = imgf[srcIdx];
+                        v = v < 0 ? -1 : 255 - v * 255 / count;
+
                         if (v >= 0)
                         {
                             byte b = (byte)Math.Min(255, Math.Max((v * k), 0));
@@ -606,6 +608,7 @@ namespace DephtInition
             {
                 imgfOut[yLin] = imgfIn[yLin];
                 imgfOut[yLin + stride - 1] = imgfIn[yLin + stride - 1];
+                yLin += stride;
             }
 
             // visit each pixel not belonging to borders;

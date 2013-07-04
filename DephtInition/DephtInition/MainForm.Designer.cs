@@ -211,7 +211,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(258, 24);
             this.label2.TabIndex = 7;
-            this.label2.Text = "spikes filter treshold (0-255)";
+            this.label2.Text = "spikes filter treshold (0-100)";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // updSpikeFilterTreshold
@@ -224,16 +224,11 @@
             0,
             65536});
             this.updSpikeFilterTreshold.Location = new System.Drawing.Point(261, 3);
-            this.updSpikeFilterTreshold.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
             this.updSpikeFilterTreshold.Name = "updSpikeFilterTreshold";
             this.updSpikeFilterTreshold.Size = new System.Drawing.Size(64, 20);
             this.updSpikeFilterTreshold.TabIndex = 6;
             this.updSpikeFilterTreshold.Value = new decimal(new int[] {
-            10,
+            2,
             0,
             0,
             0});
