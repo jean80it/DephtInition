@@ -38,7 +38,9 @@ namespace DephtInition
 
         int _multiResSteps = 3;
 
-        float _curveReliabilityTreshold = 0.3f;
+        float _curveReliabilityTreshold = 0.2f;
+
+        int _preShrinkTimes = 1;
 
         public MainForm()
         {
@@ -168,10 +170,14 @@ namespace DephtInition
         {
             if ((bool)(btnGo.Tag) == false)
             {
+                _preShrinkTimes = (int)updShrinkTimes.Value;
+
                 _stackInterDistance = (float)updStackInterDistance.Value;
-                _spikeFilterTreshold = (float)updSpikeFilterTreshold.Value;
                 _multiResSteps = (int)updMultiResSteps.Value;
                 _curveReliabilityTreshold = (float)updCurveReliabilityTreshold.Value;
+
+                _spikeFilterTreshold = (float)updSpikeFilterTreshold.Value;
+                
 
                 btnGo.Text = "cancel";
                 btnGo.Tag = true;
@@ -422,7 +428,7 @@ namespace DephtInition
                     FloatMap imgf;
 
                     // get luminance map
-                    imgf = MapUtils.HalfMap(MapUtils.Bmp2Map(_bmp));
+                    imgf = MapUtils.HalfMap(MapUtils.Bmp2Map(_bmp), _preShrinkTimes);
                     
                     _imgfs.Add(imgf);
                 }
