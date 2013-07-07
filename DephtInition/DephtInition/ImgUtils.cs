@@ -589,7 +589,7 @@ namespace DephtInition
         }
 
         // This is some sort of median filter, with the difference that
-        // strange values are just invalidated and left
+        // "outlier" values are just invalidated and left
         // for another step to be replaced with appropriate value
         // (this additional interpolation step still doesn't exist, though)
         public static FloatMap SpikesFilter(FloatMap imgfIn, float treshold)
@@ -788,6 +788,93 @@ namespace DephtInition
             var d = Math.Abs(imgfIn[i] - (neighborhoodAccu / neighborhoodWeight));
 
             return d;
+        }
+
+        // Caps holes taking values (weighted by distance) from neighborhood
+        // for interpolation; filter can cap holes as large as filterHalfSize*2;
+        // multiple passes could be needed.
+        public static FloatMap CapHoles(FloatMap imgfIn, int filterHalfSize, out bool thereAreStillHoles)
+        {
+            thereAreStillHoles = false;
+            FloatMap filter = getDistanceWeightMap(filterHalfSize);
+            int filterSize = filterHalfSize * 2 +1; 
+
+            int h = imgfIn.H;
+            int w = imgfIn.W;
+
+            var imgfOut = new FloatMap(w, h);
+
+            for (int y = 0; y < h ; ++y)
+            {
+                for (int x = 0; x < w; ++x)
+                {
+                    // if point in [x,y] == -1 then cap that:
+                    // foreach a,b from x-filtersize to x+filtersize (same for y)
+                    // if that point is != -1 accumulate that * weight[a,b], accumulate weight[a,b]
+
+                    if (imgfIn[x, y] < 0) // --> need to cap
+                    {
+                        float accu = 0;
+                        float wAccu = 0;
+                        int cMinX = x - filterHalfSize;
+                        int cMinY = y - filterHalfSize;
+                        int minX = Math.Max(0, cMinX);
+                        int minY = Math.Max(0, cMinY);
+                        int xOffs = minX - cMinX; 
+                        int yOffs = minY - cMinY;
+                        int maxX = Math.Min(w, x + filterHalfSize);
+                        int maxY = Math.Min(h, y + filterHalfSize);
+                        for (int b = minY, fb = yOffs; b < maxY; ++b, ++fb)
+                        {
+                            for (int a = minX, fa = xOffs; a < maxX; ++a, ++fa)
+                            {
+                                float v = imgfIn[a, b];
+                                if (v >= 0)
+                                {
+                                    float weight = filter[fa, fb];
+                                    wAccu += weight;
+                                    accu += v * weight;
+                                }
+                            }
+                        }
+
+                        if (wAccu != 0)
+                        {
+                            imgfOut[x, y] = accu / wAccu;
+                        }
+                        else
+                        {
+                            imgfOut[x, y] = -1;
+                            thereAreStillHoles = true;
+                        }
+                    }
+                    else
+                    {
+                        imgfOut[x, y] = imgfIn[x,y];
+                    }
+                    
+                }
+            }
+
+            return imgfOut;
+        }
+
+        private static FloatMap getDistanceWeightMap(int filterHalfSize)
+        {
+            int size = filterHalfSize * 2 + 1;
+            int sup = size - 1;
+            FloatMap wMap = new FloatMap(size, size);
+            for (int y = 0; y < filterHalfSize; ++y)
+            {
+                for (int x = 0; x <= filterHalfSize; ++x)
+                {
+                    wMap[x, y] = wMap[y, sup - x] = wMap[sup - y, x] = wMap[sup - x, sup - y] = (float)Math.Sqrt(x * x + y * y);
+                }
+            }
+
+            wMap[filterHalfSize, filterHalfSize] = 0;
+
+            return wMap;
         }
     }
 }

@@ -40,42 +40,52 @@
             this.dephtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
             this.pnlOptions = new System.Windows.Forms.Panel();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.updShrinkTimes = new System.Windows.Forms.NumericUpDown();
-            this.grpPreprocess = new System.Windows.Forms.GroupBox();
-            this.grpProcess = new System.Windows.Forms.GroupBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.updStackInterDistance = new System.Windows.Forms.NumericUpDown();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.updMultiResSteps = new System.Windows.Forms.NumericUpDown();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.updCurveReliabilityTreshold = new System.Windows.Forms.NumericUpDown();
             this.grpPostprocess = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.updSpikeFilterTreshold = new System.Windows.Forms.NumericUpDown();
-            this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
+            this.grpProcess = new System.Windows.Forms.GroupBox();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.updCurveReliabilityTreshold = new System.Windows.Forms.NumericUpDown();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.updMultiResSteps = new System.Windows.Forms.NumericUpDown();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.updStackInterDistance = new System.Windows.Forms.NumericUpDown();
+            this.grpPreprocess = new System.Windows.Forms.GroupBox();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.updShrinkTimes = new System.Windows.Forms.NumericUpDown();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.updCapHolesSize = new System.Windows.Forms.NumericUpDown();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.updCapHolesIterations = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlOptions.SuspendLayout();
-            this.panel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updShrinkTimes)).BeginInit();
-            this.grpPreprocess.SuspendLayout();
-            this.grpProcess.SuspendLayout();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updStackInterDistance)).BeginInit();
-            this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updMultiResSteps)).BeginInit();
-            this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updCurveReliabilityTreshold)).BeginInit();
             this.grpPostprocess.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updSpikeFilterTreshold)).BeginInit();
+            this.grpProcess.SuspendLayout();
+            this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updCurveReliabilityTreshold)).BeginInit();
+            this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updMultiResSteps)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updStackInterDistance)).BeginInit();
+            this.grpPreprocess.SuspendLayout();
+            this.panel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updShrinkTimes)).BeginInit();
+            this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesSize)).BeginInit();
+            this.panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesIterations)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -116,7 +126,7 @@
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.loadToolStripMenuItem.Text = "Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
@@ -177,6 +187,15 @@
             this.pnlBottom.Size = new System.Drawing.Size(500, 27);
             this.pnlBottom.TabIndex = 3;
             // 
+            // gaugeProgressBar1
+            // 
+            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gaugeProgressBar1.Label = "waiting";
+            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
+            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
+            this.gaugeProgressBar1.Size = new System.Drawing.Size(425, 27);
+            this.gaugeProgressBar1.TabIndex = 2;
+            // 
             // pnlOptions
             // 
             this.pnlOptions.Controls.Add(this.grpPostprocess);
@@ -189,55 +208,58 @@
             this.pnlOptions.Size = new System.Drawing.Size(500, 308);
             this.pnlOptions.TabIndex = 10;
             // 
-            // panel5
+            // grpPostprocess
             // 
-            this.panel5.Controls.Add(this.label5);
-            this.panel5.Controls.Add(this.updShrinkTimes);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel5.Location = new System.Drawing.Point(3, 16);
-            this.panel5.Name = "panel5";
-            this.panel5.Padding = new System.Windows.Forms.Padding(3);
-            this.panel5.Size = new System.Drawing.Size(488, 30);
-            this.panel5.TabIndex = 4;
+            this.grpPostprocess.Controls.Add(this.panel7);
+            this.grpPostprocess.Controls.Add(this.panel6);
+            this.grpPostprocess.Controls.Add(this.panel2);
+            this.grpPostprocess.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpPostprocess.Location = new System.Drawing.Point(3, 179);
+            this.grpPostprocess.Name = "grpPostprocess";
+            this.grpPostprocess.Size = new System.Drawing.Size(494, 112);
+            this.grpPostprocess.TabIndex = 7;
+            this.grpPostprocess.TabStop = false;
+            this.grpPostprocess.Text = "Post process";
             // 
-            // label5
+            // panel2
             // 
-            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(3, 3);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(418, 24);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "shrink input image n times";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.panel2.Controls.Add(this.label2);
+            this.panel2.Controls.Add(this.updSpikeFilterTreshold);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(3, 16);
+            this.panel2.Name = "panel2";
+            this.panel2.Padding = new System.Windows.Forms.Padding(3);
+            this.panel2.Size = new System.Drawing.Size(488, 30);
+            this.panel2.TabIndex = 2;
             // 
-            // updShrinkTimes
+            // label2
             // 
-            this.updShrinkTimes.Dock = System.Windows.Forms.DockStyle.Right;
-            this.updShrinkTimes.Location = new System.Drawing.Point(421, 3);
-            this.updShrinkTimes.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.updShrinkTimes.Name = "updShrinkTimes";
-            this.updShrinkTimes.Size = new System.Drawing.Size(64, 20);
-            this.updShrinkTimes.TabIndex = 8;
-            this.updShrinkTimes.Value = new decimal(new int[] {
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Location = new System.Drawing.Point(3, 3);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(418, 24);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "spikes filter treshold (0-100)";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updSpikeFilterTreshold
+            // 
+            this.updSpikeFilterTreshold.DecimalPlaces = 1;
+            this.updSpikeFilterTreshold.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updSpikeFilterTreshold.Increment = new decimal(new int[] {
             1,
             0,
             0,
+            65536});
+            this.updSpikeFilterTreshold.Location = new System.Drawing.Point(421, 3);
+            this.updSpikeFilterTreshold.Name = "updSpikeFilterTreshold";
+            this.updSpikeFilterTreshold.Size = new System.Drawing.Size(64, 20);
+            this.updSpikeFilterTreshold.TabIndex = 6;
+            this.updSpikeFilterTreshold.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
             0});
-            // 
-            // grpPreprocess
-            // 
-            this.grpPreprocess.Controls.Add(this.panel5);
-            this.grpPreprocess.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpPreprocess.Location = new System.Drawing.Point(3, 3);
-            this.grpPreprocess.Name = "grpPreprocess";
-            this.grpPreprocess.Size = new System.Drawing.Size(494, 54);
-            this.grpPreprocess.TabIndex = 5;
-            this.grpPreprocess.TabStop = false;
-            this.grpPreprocess.Text = "Pre process";
             // 
             // grpProcess
             // 
@@ -251,6 +273,85 @@
             this.grpProcess.TabIndex = 6;
             this.grpProcess.TabStop = false;
             this.grpProcess.Text = "Process";
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.label4);
+            this.panel4.Controls.Add(this.updCurveReliabilityTreshold);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(3, 76);
+            this.panel4.Name = "panel4";
+            this.panel4.Padding = new System.Windows.Forms.Padding(3);
+            this.panel4.Size = new System.Drawing.Size(488, 30);
+            this.panel4.TabIndex = 4;
+            // 
+            // label4
+            // 
+            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label4.Location = new System.Drawing.Point(3, 3);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(418, 24);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "curve raliability treshold (0.1-10)";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updCurveReliabilityTreshold
+            // 
+            this.updCurveReliabilityTreshold.DecimalPlaces = 1;
+            this.updCurveReliabilityTreshold.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updCurveReliabilityTreshold.Location = new System.Drawing.Point(421, 3);
+            this.updCurveReliabilityTreshold.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.updCurveReliabilityTreshold.Name = "updCurveReliabilityTreshold";
+            this.updCurveReliabilityTreshold.Size = new System.Drawing.Size(64, 20);
+            this.updCurveReliabilityTreshold.TabIndex = 8;
+            this.updCurveReliabilityTreshold.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            65536});
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.label3);
+            this.panel3.Controls.Add(this.updMultiResSteps);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(3, 46);
+            this.panel3.Name = "panel3";
+            this.panel3.Padding = new System.Windows.Forms.Padding(3);
+            this.panel3.Size = new System.Drawing.Size(488, 30);
+            this.panel3.TabIndex = 3;
+            // 
+            // label3
+            // 
+            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label3.Location = new System.Drawing.Point(3, 3);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(418, 24);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "multiresolution steps (1-10)";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updMultiResSteps
+            // 
+            this.updMultiResSteps.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updMultiResSteps.Location = new System.Drawing.Point(421, 3);
+            this.updMultiResSteps.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.updMultiResSteps.Name = "updMultiResSteps";
+            this.updMultiResSteps.Size = new System.Drawing.Size(64, 20);
+            this.updMultiResSteps.TabIndex = 8;
+            this.updMultiResSteps.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
             // 
             // panel1
             // 
@@ -297,144 +398,133 @@
             0,
             0});
             // 
-            // panel3
+            // grpPreprocess
             // 
-            this.panel3.Controls.Add(this.label3);
-            this.panel3.Controls.Add(this.updMultiResSteps);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(3, 46);
-            this.panel3.Name = "panel3";
-            this.panel3.Padding = new System.Windows.Forms.Padding(3);
-            this.panel3.Size = new System.Drawing.Size(488, 30);
-            this.panel3.TabIndex = 3;
+            this.grpPreprocess.Controls.Add(this.panel5);
+            this.grpPreprocess.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpPreprocess.Location = new System.Drawing.Point(3, 3);
+            this.grpPreprocess.Name = "grpPreprocess";
+            this.grpPreprocess.Size = new System.Drawing.Size(494, 54);
+            this.grpPreprocess.TabIndex = 5;
+            this.grpPreprocess.TabStop = false;
+            this.grpPreprocess.Text = "Pre process";
             // 
-            // label3
+            // panel5
             // 
-            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Location = new System.Drawing.Point(3, 3);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(418, 24);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "multiresolution steps (1-10)";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.panel5.Controls.Add(this.label5);
+            this.panel5.Controls.Add(this.updShrinkTimes);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel5.Location = new System.Drawing.Point(3, 16);
+            this.panel5.Name = "panel5";
+            this.panel5.Padding = new System.Windows.Forms.Padding(3);
+            this.panel5.Size = new System.Drawing.Size(488, 30);
+            this.panel5.TabIndex = 4;
             // 
-            // updMultiResSteps
+            // label5
             // 
-            this.updMultiResSteps.Dock = System.Windows.Forms.DockStyle.Right;
-            this.updMultiResSteps.Location = new System.Drawing.Point(421, 3);
-            this.updMultiResSteps.Maximum = new decimal(new int[] {
+            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label5.Location = new System.Drawing.Point(3, 3);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(418, 24);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "shrink input image n times (1-10)";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updShrinkTimes
+            // 
+            this.updShrinkTimes.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updShrinkTimes.Location = new System.Drawing.Point(421, 3);
+            this.updShrinkTimes.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            this.updMultiResSteps.Name = "updMultiResSteps";
-            this.updMultiResSteps.Size = new System.Drawing.Size(64, 20);
-            this.updMultiResSteps.TabIndex = 8;
-            this.updMultiResSteps.Value = new decimal(new int[] {
+            this.updShrinkTimes.Name = "updShrinkTimes";
+            this.updShrinkTimes.Size = new System.Drawing.Size(64, 20);
+            this.updShrinkTimes.TabIndex = 8;
+            this.updShrinkTimes.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.label6);
+            this.panel6.Controls.Add(this.updCapHolesSize);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel6.Location = new System.Drawing.Point(3, 46);
+            this.panel6.Name = "panel6";
+            this.panel6.Padding = new System.Windows.Forms.Padding(3);
+            this.panel6.Size = new System.Drawing.Size(488, 30);
+            this.panel6.TabIndex = 4;
+            // 
+            // label6
+            // 
+            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label6.Location = new System.Drawing.Point(3, 3);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(418, 24);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "cap holes filter emisize (1-10)";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updCapHolesSize
+            // 
+            this.updCapHolesSize.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updCapHolesSize.Location = new System.Drawing.Point(421, 3);
+            this.updCapHolesSize.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.updCapHolesSize.Name = "updCapHolesSize";
+            this.updCapHolesSize.Size = new System.Drawing.Size(64, 20);
+            this.updCapHolesSize.TabIndex = 8;
+            this.updCapHolesSize.Value = new decimal(new int[] {
             3,
             0,
             0,
             0});
             // 
-            // panel4
+            // panel7
             // 
-            this.panel4.Controls.Add(this.label4);
-            this.panel4.Controls.Add(this.updCurveReliabilityTreshold);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel4.Location = new System.Drawing.Point(3, 76);
-            this.panel4.Name = "panel4";
-            this.panel4.Padding = new System.Windows.Forms.Padding(3);
-            this.panel4.Size = new System.Drawing.Size(488, 30);
-            this.panel4.TabIndex = 4;
+            this.panel7.Controls.Add(this.label7);
+            this.panel7.Controls.Add(this.updCapHolesIterations);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel7.Location = new System.Drawing.Point(3, 76);
+            this.panel7.Name = "panel7";
+            this.panel7.Padding = new System.Windows.Forms.Padding(3);
+            this.panel7.Size = new System.Drawing.Size(488, 30);
+            this.panel7.TabIndex = 5;
             // 
-            // label4
+            // label7
             // 
-            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(3, 3);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(418, 24);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "curve raliability treshold (0.1-10)";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label7.Location = new System.Drawing.Point(3, 3);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(418, 24);
+            this.label7.TabIndex = 9;
+            this.label7.Text = "cap holes filter iterations (1-10)";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // updCurveReliabilityTreshold
+            // updCapHolesIterations
             // 
-            this.updCurveReliabilityTreshold.DecimalPlaces = 1;
-            this.updCurveReliabilityTreshold.Dock = System.Windows.Forms.DockStyle.Right;
-            this.updCurveReliabilityTreshold.Location = new System.Drawing.Point(421, 3);
-            this.updCurveReliabilityTreshold.Maximum = new decimal(new int[] {
+            this.updCapHolesIterations.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updCapHolesIterations.Location = new System.Drawing.Point(421, 3);
+            this.updCapHolesIterations.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            this.updCurveReliabilityTreshold.Name = "updCurveReliabilityTreshold";
-            this.updCurveReliabilityTreshold.Size = new System.Drawing.Size(64, 20);
-            this.updCurveReliabilityTreshold.TabIndex = 8;
-            this.updCurveReliabilityTreshold.Value = new decimal(new int[] {
-            2,
-            0,
-            0,
-            65536});
-            // 
-            // grpPostprocess
-            // 
-            this.grpPostprocess.Controls.Add(this.panel2);
-            this.grpPostprocess.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpPostprocess.Location = new System.Drawing.Point(3, 179);
-            this.grpPostprocess.Name = "grpPostprocess";
-            this.grpPostprocess.Size = new System.Drawing.Size(494, 73);
-            this.grpPostprocess.TabIndex = 7;
-            this.grpPostprocess.TabStop = false;
-            this.grpPostprocess.Text = "Post process";
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Controls.Add(this.updSpikeFilterTreshold);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(3, 16);
-            this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(3);
-            this.panel2.Size = new System.Drawing.Size(488, 30);
-            this.panel2.TabIndex = 2;
-            // 
-            // label2
-            // 
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Location = new System.Drawing.Point(3, 3);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(418, 24);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "spikes filter treshold (0-100)";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // updSpikeFilterTreshold
-            // 
-            this.updSpikeFilterTreshold.DecimalPlaces = 1;
-            this.updSpikeFilterTreshold.Dock = System.Windows.Forms.DockStyle.Right;
-            this.updSpikeFilterTreshold.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.updSpikeFilterTreshold.Location = new System.Drawing.Point(421, 3);
-            this.updSpikeFilterTreshold.Name = "updSpikeFilterTreshold";
-            this.updSpikeFilterTreshold.Size = new System.Drawing.Size(64, 20);
-            this.updSpikeFilterTreshold.TabIndex = 6;
-            this.updSpikeFilterTreshold.Value = new decimal(new int[] {
-            2,
+            this.updCapHolesIterations.Name = "updCapHolesIterations";
+            this.updCapHolesIterations.Size = new System.Drawing.Size(64, 20);
+            this.updCapHolesIterations.TabIndex = 8;
+            this.updCapHolesIterations.Value = new decimal(new int[] {
+            3,
             0,
             0,
             0});
-            // 
-            // gaugeProgressBar1
-            // 
-            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gaugeProgressBar1.Label = "waiting";
-            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
-            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
-            this.gaugeProgressBar1.Size = new System.Drawing.Size(425, 27);
-            this.gaugeProgressBar1.TabIndex = 2;
             // 
             // MainForm
             // 
@@ -454,19 +544,23 @@
             this.menuStrip1.PerformLayout();
             this.pnlBottom.ResumeLayout(false);
             this.pnlOptions.ResumeLayout(false);
-            this.panel5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.updShrinkTimes)).EndInit();
-            this.grpPreprocess.ResumeLayout(false);
-            this.grpProcess.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.updStackInterDistance)).EndInit();
-            this.panel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.updMultiResSteps)).EndInit();
-            this.panel4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.updCurveReliabilityTreshold)).EndInit();
             this.grpPostprocess.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.updSpikeFilterTreshold)).EndInit();
+            this.grpProcess.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.updCurveReliabilityTreshold)).EndInit();
+            this.panel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.updMultiResSteps)).EndInit();
+            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.updStackInterDistance)).EndInit();
+            this.grpPreprocess.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.updShrinkTimes)).EndInit();
+            this.panel6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesSize)).EndInit();
+            this.panel7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesIterations)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -506,6 +600,12 @@
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown updShrinkTimes;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown updCapHolesIterations;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown updCapHolesSize;
     }
 }
 

@@ -32,15 +32,15 @@ namespace DephtInition
         BitmapShowForm _showDepthForm;
         ValuesGraphForm _graphForm;
 
-        FloatMap _maxMap = null;
+        FloatMap _maxMap = null; // TODO: introduce middle step "raw map"
 
+        // TODO: databind these:
         float _spikeFilterTreshold = 2.0f;
-
         int _multiResSteps = 3;
-
         float _curveReliabilityTreshold = 0.2f;
-
         int _preShrinkTimes = 1;
+        int _capHolesFilterEmisize = 3;
+        int _capHolesFilterIterations = 3;
 
         public MainForm()
         {
@@ -177,7 +177,9 @@ namespace DephtInition
                 _curveReliabilityTreshold = (float)updCurveReliabilityTreshold.Value;
 
                 _spikeFilterTreshold = (float)updSpikeFilterTreshold.Value;
-                
+
+                _capHolesFilterEmisize = (int)updCapHolesSize.Value;
+                _capHolesFilterIterations = (int)updCapHolesIterations.Value;
 
                 btnGo.Text = "cancel";
                 btnGo.Tag = true;
@@ -473,7 +475,19 @@ namespace DephtInition
 
             _maxMap = getMaxMap();
 
+            // filter out spikes
             _maxMap = MapUtils.SpikesFilter(_maxMap, _spikeFilterTreshold);
+
+            // cap holes
+            bool thereAreStillHoles = false;
+            for (int i = 0; i < _capHolesFilterIterations; ++i )
+            {
+                _maxMap = MapUtils.CapHoles(_maxMap, _capHolesFilterEmisize, out thereAreStillHoles);
+                if (!thereAreStillHoles)
+                {
+                    break;
+                }
+            }
 
             // SAVE PLY 
 
