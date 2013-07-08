@@ -239,7 +239,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(418, 24);
             this.label7.TabIndex = 9;
-            this.label7.Text = "cap holes filter iterations (1-10)";
+            this.label7.Text = "cap holes max filter iterations (1-10)";
             this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // updCapHolesIterations
