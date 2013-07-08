@@ -35,12 +35,13 @@ namespace DephtInition
         FloatMap _maxMap = null; // TODO: introduce middle step "raw map"
 
         // TODO: databind these:
-        float _spikeFilterTreshold = 2.0f;
-        int _multiResSteps = 3;
-        float _curveReliabilityTreshold = 0.2f;
-        int _preShrinkTimes = 1;
-        int _capHolesFilterEmisize = 3;
-        int _capHolesFilterIterations = 3;
+        public float StackInterDistance { get; set; }
+        public float SpikeFilterTreshold { get; set; }
+        public int MultiResSteps { get; set; }
+        public float CurveReliabilityTreshold { get; set; } // TODO: make this dependant on parable's "aspect ratio"
+        public int PreShrinkTimes { get; set; }
+        public int CapHolesFilterEmisize { get; set; }
+        public int CapHolesFilterIterations { get; set; }
 
         public MainForm()
         {
@@ -63,6 +64,14 @@ namespace DephtInition
             _showDepthForm.pnlDisplayBitmap.MouseDown += new MouseEventHandler(checkSpikes);
 
             btnGo.Tag = false;
+
+            SpikeFilterTreshold = 2.0f;
+            MultiResSteps = 3;
+            CurveReliabilityTreshold = 0.2f;
+            PreShrinkTimes = 1;
+            CapHolesFilterEmisize = 3;
+            CapHolesFilterIterations = 3;
+            StackInterDistance = 8;
         }
 
         void checkSpikes(object sender, MouseEventArgs e)
@@ -164,22 +173,22 @@ namespace DephtInition
         int _w = -1;
         int _h = -1;
 
-        float _stackInterDistance = 8;
-
         private void btnGo_Click(object sender, EventArgs e)
         {
             if ((bool)(btnGo.Tag) == false)
             {
-                _preShrinkTimes = (int)updShrinkTimes.Value;
+                // vvv MOVED TO FormLoad... done with DataBinding vvv
+                //
+                //_preShrinkTimes = (int)updShrinkTimes.Value;
 
-                _stackInterDistance = (float)updStackInterDistance.Value;
-                _multiResSteps = (int)updMultiResSteps.Value;
-                _curveReliabilityTreshold = (float)updCurveReliabilityTreshold.Value;
+                //_stackInterDistance = (float)updStackInterDistance.Value;
+                //_multiResSteps = (int)updMultiResSteps.Value;
+                //_curveReliabilityTreshold = (float)updCurveReliabilityTreshold.Value;
 
-                _spikeFilterTreshold = (float)updSpikeFilterTreshold.Value;
+                //_spikeFilterTreshold = (float)updSpikeFilterTreshold.Value;
 
-                _capHolesFilterEmisize = (int)updCapHolesSize.Value;
-                _capHolesFilterIterations = (int)updCapHolesIterations.Value;
+                //_capHolesFilterEmisize = (int)updCapHolesSize.Value;
+                //_capHolesFilterIterations = (int)updCapHolesIterations.Value;
 
                 btnGo.Text = "cancel";
                 btnGo.Tag = true;
@@ -338,7 +347,7 @@ namespace DephtInition
                 //    return -1;
                 //}
 
-                if (max - average < _curveReliabilityTreshold)
+                if (max - average < CurveReliabilityTreshold)
                 {
                     return -1;
                 }
@@ -388,8 +397,6 @@ namespace DephtInition
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            // TODO: correct the bell-distorsion
-
             if ((_fileNames == null) || (_fileNames.Length <= 3))
             {
                 return;
@@ -430,7 +437,7 @@ namespace DephtInition
                     FloatMap imgf;
 
                     // get luminance map
-                    imgf = MapUtils.HalfMap(MapUtils.Bmp2Map(_bmp), _preShrinkTimes);
+                    imgf = MapUtils.HalfMap(MapUtils.Bmp2Map(_bmp), PreShrinkTimes);
                     
                     _imgfs.Add(imgf);
                 }
@@ -454,7 +461,7 @@ namespace DephtInition
             foreach (var imgf in _imgfs)
             {
                 // get contrast, then shrink result (averaging pixels)
-                FloatMap newImgf = MapUtils.HalfMap(MapUtils.GetMultiResContrastEvaluation(imgf, 2), 4);
+                FloatMap newImgf = MapUtils.HalfMap(MapUtils.GetMultiResContrastEvaluation(imgf, MultiResSteps), 4);
 
                 newImgfs.Add(newImgf);
 
@@ -476,18 +483,20 @@ namespace DephtInition
             _maxMap = getMaxMap();
 
             // filter out spikes
-            _maxMap = MapUtils.SpikesFilter(_maxMap, _spikeFilterTreshold);
+            _maxMap = MapUtils.SpikesFilter(_maxMap, SpikeFilterTreshold);
 
             // cap holes
             bool thereAreStillHoles = false;
-            for (int i = 0; i < _capHolesFilterIterations; ++i )
+            for (int i = 0; i < CapHolesFilterIterations; ++i )
             {
-                _maxMap = MapUtils.CapHoles(_maxMap, _capHolesFilterEmisize, out thereAreStillHoles);
+                _maxMap = MapUtils.CapHoles(_maxMap, CapHolesFilterEmisize, out thereAreStillHoles);
                 if (!thereAreStillHoles)
                 {
                     break;
                 }
             }
+
+            // TODO: correct the bell-distorsion
 
             // SAVE PLY 
 
@@ -536,8 +545,8 @@ namespace DephtInition
                     float s = (float)Math.Max(rw, rh);
                     float xOffs = -0.5f * s / (float)rw;
                     float yOffs = -0.5f * s / (float)rh;
-                    float zk = -_stackInterDistance;
-                    float zOffs = _stackInterDistance * (float)(_imgfs.Count) * 0.5f;
+                    float zk = -StackInterDistance;
+                    float zOffs = StackInterDistance * (float)(_imgfs.Count) * 0.5f;
 
                     unsafe
                     {
@@ -572,6 +581,11 @@ namespace DephtInition
 
                 bmp.UnlockBits(dstData);
             }
+        }
+
+        private void saveObj()
+        { 
+            
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -616,6 +630,20 @@ namespace DephtInition
             {
                 gaugeProgressBar1.Label = "canceled";
             }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            updShrinkTimes.DataBindings.Add("Value", this, "PreShrinkTimes");
+
+            updStackInterDistance.DataBindings.Add("Value", this, "StackInterDistance");
+            updMultiResSteps.DataBindings.Add("Value", this, "MultiResSteps");
+            updCurveReliabilityTreshold.DataBindings.Add("Value", this, "CurveReliabilityTreshold");
+
+            updSpikeFilterTreshold.DataBindings.Add("Value", this, "SpikeFilterTreshold");
+
+            updCapHolesSize.DataBindings.Add("Value", this, "CapHolesFilterEmisize");
+            updCapHolesIterations.DataBindings.Add("Value", this, "CapHolesFilterIterations");
         }
     }
 }

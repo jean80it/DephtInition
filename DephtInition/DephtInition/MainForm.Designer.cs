@@ -43,6 +43,12 @@
             this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
             this.pnlOptions = new System.Windows.Forms.Panel();
             this.grpPostprocess = new System.Windows.Forms.GroupBox();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.updCapHolesIterations = new System.Windows.Forms.NumericUpDown();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.updCapHolesSize = new System.Windows.Forms.NumericUpDown();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.updSpikeFilterTreshold = new System.Windows.Forms.NumericUpDown();
@@ -60,16 +66,14 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.updShrinkTimes = new System.Windows.Forms.NumericUpDown();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.label6 = new System.Windows.Forms.Label();
-            this.updCapHolesSize = new System.Windows.Forms.NumericUpDown();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
-            this.updCapHolesIterations = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlOptions.SuspendLayout();
             this.grpPostprocess.SuspendLayout();
+            this.panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesIterations)).BeginInit();
+            this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesSize)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updSpikeFilterTreshold)).BeginInit();
             this.grpProcess.SuspendLayout();
@@ -82,10 +86,6 @@
             this.grpPreprocess.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updShrinkTimes)).BeginInit();
-            this.panel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesSize)).BeginInit();
-            this.panel7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesIterations)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -220,6 +220,84 @@
             this.grpPostprocess.TabIndex = 7;
             this.grpPostprocess.TabStop = false;
             this.grpPostprocess.Text = "Post process";
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.label7);
+            this.panel7.Controls.Add(this.updCapHolesIterations);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel7.Location = new System.Drawing.Point(3, 76);
+            this.panel7.Name = "panel7";
+            this.panel7.Padding = new System.Windows.Forms.Padding(3);
+            this.panel7.Size = new System.Drawing.Size(488, 30);
+            this.panel7.TabIndex = 5;
+            // 
+            // label7
+            // 
+            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label7.Location = new System.Drawing.Point(3, 3);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(418, 24);
+            this.label7.TabIndex = 9;
+            this.label7.Text = "cap holes filter iterations (1-10)";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updCapHolesIterations
+            // 
+            this.updCapHolesIterations.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updCapHolesIterations.Location = new System.Drawing.Point(421, 3);
+            this.updCapHolesIterations.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.updCapHolesIterations.Name = "updCapHolesIterations";
+            this.updCapHolesIterations.Size = new System.Drawing.Size(64, 20);
+            this.updCapHolesIterations.TabIndex = 8;
+            this.updCapHolesIterations.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.label6);
+            this.panel6.Controls.Add(this.updCapHolesSize);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel6.Location = new System.Drawing.Point(3, 46);
+            this.panel6.Name = "panel6";
+            this.panel6.Padding = new System.Windows.Forms.Padding(3);
+            this.panel6.Size = new System.Drawing.Size(488, 30);
+            this.panel6.TabIndex = 4;
+            // 
+            // label6
+            // 
+            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label6.Location = new System.Drawing.Point(3, 3);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(418, 24);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "cap holes filter emisize (1-10)";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updCapHolesSize
+            // 
+            this.updCapHolesSize.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updCapHolesSize.Location = new System.Drawing.Point(421, 3);
+            this.updCapHolesSize.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.updCapHolesSize.Name = "updCapHolesSize";
+            this.updCapHolesSize.Size = new System.Drawing.Size(64, 20);
+            this.updCapHolesSize.TabIndex = 8;
+            this.updCapHolesSize.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
             // 
             // panel2
             // 
@@ -448,84 +526,6 @@
             0,
             0});
             // 
-            // panel6
-            // 
-            this.panel6.Controls.Add(this.label6);
-            this.panel6.Controls.Add(this.updCapHolesSize);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel6.Location = new System.Drawing.Point(3, 46);
-            this.panel6.Name = "panel6";
-            this.panel6.Padding = new System.Windows.Forms.Padding(3);
-            this.panel6.Size = new System.Drawing.Size(488, 30);
-            this.panel6.TabIndex = 4;
-            // 
-            // label6
-            // 
-            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Location = new System.Drawing.Point(3, 3);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(418, 24);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "cap holes filter emisize (1-10)";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // updCapHolesSize
-            // 
-            this.updCapHolesSize.Dock = System.Windows.Forms.DockStyle.Right;
-            this.updCapHolesSize.Location = new System.Drawing.Point(421, 3);
-            this.updCapHolesSize.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.updCapHolesSize.Name = "updCapHolesSize";
-            this.updCapHolesSize.Size = new System.Drawing.Size(64, 20);
-            this.updCapHolesSize.TabIndex = 8;
-            this.updCapHolesSize.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
-            // 
-            // panel7
-            // 
-            this.panel7.Controls.Add(this.label7);
-            this.panel7.Controls.Add(this.updCapHolesIterations);
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel7.Location = new System.Drawing.Point(3, 76);
-            this.panel7.Name = "panel7";
-            this.panel7.Padding = new System.Windows.Forms.Padding(3);
-            this.panel7.Size = new System.Drawing.Size(488, 30);
-            this.panel7.TabIndex = 5;
-            // 
-            // label7
-            // 
-            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label7.Location = new System.Drawing.Point(3, 3);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(418, 24);
-            this.label7.TabIndex = 9;
-            this.label7.Text = "cap holes filter iterations (1-10)";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // updCapHolesIterations
-            // 
-            this.updCapHolesIterations.Dock = System.Windows.Forms.DockStyle.Right;
-            this.updCapHolesIterations.Location = new System.Drawing.Point(421, 3);
-            this.updCapHolesIterations.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.updCapHolesIterations.Name = "updCapHolesIterations";
-            this.updCapHolesIterations.Size = new System.Drawing.Size(64, 20);
-            this.updCapHolesIterations.TabIndex = 8;
-            this.updCapHolesIterations.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -539,12 +539,17 @@
             this.MinimumSize = new System.Drawing.Size(270, 176);
             this.Name = "MainForm";
             this.Text = "DephtInition";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.pnlBottom.ResumeLayout(false);
             this.pnlOptions.ResumeLayout(false);
             this.grpPostprocess.ResumeLayout(false);
+            this.panel7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesIterations)).EndInit();
+            this.panel6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesSize)).EndInit();
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.updSpikeFilterTreshold)).EndInit();
             this.grpProcess.ResumeLayout(false);
@@ -557,10 +562,6 @@
             this.grpPreprocess.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.updShrinkTimes)).EndInit();
-            this.panel6.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesSize)).EndInit();
-            this.panel7.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesIterations)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

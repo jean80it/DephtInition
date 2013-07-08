@@ -868,7 +868,9 @@ namespace DephtInition
             {
                 for (int x = 0; x <= filterHalfSize; ++x)
                 {
-                    wMap[x, y] = wMap[y, sup - x] = wMap[sup - y, x] = wMap[sup - x, sup - y] = (float)Math.Sqrt(x * x + y * y);
+                    float dx = (filterHalfSize - x);
+                    float dy = (filterHalfSize - y);
+                    wMap[x, y] = wMap[y, sup - x] = wMap[sup - y, x] = wMap[sup - x, sup - y] = (float)(1.0/Math.Sqrt(dx * dx + dy * dy));
                 }
             }
 
