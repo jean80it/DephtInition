@@ -42,6 +42,7 @@ namespace DephtInition
         public int PreShrinkTimes { get; set; }
         public int CapHolesFilterEmisize { get; set; }
         public int CapHolesFilterIterations { get; set; }
+        public float CloserPictureDistance { get; set; }
 
         public MainForm()
         {
@@ -69,9 +70,10 @@ namespace DephtInition
             MultiResSteps = 3;
             CurveReliabilityTreshold = 0.2f;
             PreShrinkTimes = 1;
-            CapHolesFilterEmisize = 3;
+            CapHolesFilterEmisize = 6;
             CapHolesFilterIterations = 3;
             StackInterDistance = 8;
+            CloserPictureDistance = 100;
         }
 
         void checkSpikes(object sender, MouseEventArgs e)
@@ -542,9 +544,9 @@ namespace DephtInition
                     sw.WriteLine("property uchar blue");
                     sw.WriteLine("end_header");
 
-                    float s = (float)Math.Max(rw, rh);
-                    float xOffs = -0.5f * s / (float)rw;
-                    float yOffs = -0.5f * s / (float)rh;
+                    float invScale = 1.0f / (float)Math.Max(rw, rh);
+                    float xOffs = -0.5f * (float)rw * invScale;
+                    float yOffs = -0.5f * (float)rh * invScale;
                     float zk = -StackInterDistance;
                     float zOffs = StackInterDistance * (float)(_imgfs.Count) * 0.5f;
 
@@ -566,9 +568,14 @@ namespace DephtInition
                                     byte g = dstRow[i + 1];
                                     byte r = dstRow[i + 2];
 
-                                    float pz = v * zk + zOffs;
-                                    float px = (((float)x / s + xOffs) * 400.0f); // TODO: fix once an for all conversions between virtual units and real world ones
-                                    float py = (((float)y / s + yOffs) * 400.0f);
+                                    
+                                    float pz = v * zk;
+
+                                    float perspCorr = (CloserPictureDistance + pz) / CloserPictureDistance;
+
+                                    float px = (((float)x * invScale + xOffs) * perspCorr * 400.0f); // TODO: fix once an for all conversions between virtual units and real world ones
+                                    float py = (((float)y * invScale + yOffs) * perspCorr * 400.0f);
+                                    pz = pz + zOffs;
 
                                     // write point
                                     sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0:0.000} {1:0.000} {2:0.000} {3} {4} {5}", px, py, pz, r, g, b));
@@ -636,6 +643,7 @@ namespace DephtInition
         {
             updShrinkTimes.DataBindings.Add("Value", this, "PreShrinkTimes");
 
+            updCloserPictureDistance.DataBindings.Add("Value", this, "CloserPictureDistance");
             updStackInterDistance.DataBindings.Add("Value", this, "StackInterDistance");
             updMultiResSteps.DataBindings.Add("Value", this, "MultiResSteps");
             updCurveReliabilityTreshold.DataBindings.Add("Value", this, "CurveReliabilityTreshold");
