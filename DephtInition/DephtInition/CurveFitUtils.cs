@@ -20,7 +20,10 @@ using System.Drawing;
 
 namespace DephtInition
 {
-    // TODO: find out the original source i took this from and give credit
+    // following code slightly modified from
+    // http://blog.csharphelper.com/2010/11/08/find-a-polynomial-least-squares-fit-for-a-set-of-points-in-c.aspx
+    // and related pages (couldn't find any license specification)
+
     public class CurveFunctions
     {
         // The function.

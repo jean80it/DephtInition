@@ -547,7 +547,7 @@ namespace DephtInition
                     float invScale = 1.0f / (float)Math.Max(rw, rh);
                     float xOffs = -0.5f * (float)rw * invScale;
                     float yOffs = -0.5f * (float)rh * invScale;
-                    float zk = -StackInterDistance;
+                    float zk = StackInterDistance;
                     float zOffs = StackInterDistance * (float)(_imgfs.Count) * 0.5f;
 
                     unsafe
@@ -573,9 +573,9 @@ namespace DephtInition
 
                                     float perspCorr = (CloserPictureDistance + pz) / CloserPictureDistance;
 
-                                    float px = (((float)x * invScale + xOffs) * perspCorr * 400.0f); // TODO: fix once an for all conversions between virtual units and real world ones
-                                    float py = (((float)y * invScale + yOffs) * perspCorr * 400.0f);
-                                    pz = pz + zOffs;
+                                    float px = (((float)x * invScale + xOffs) * perspCorr * 200.0f); // TODO: fix once an for all conversions between virtual units and real world ones
+                                    float py = (((float)y * invScale + yOffs) * perspCorr * 200.0f);
+                                    pz = zOffs - pz;
 
                                     // write point
                                     sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0:0.000} {1:0.000} {2:0.000} {3} {4} {5}", px, py, pz, r, g, b));

@@ -40,6 +40,7 @@
             this.dephtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
             this.pnlOptions = new System.Windows.Forms.Panel();
             this.grpPostprocess = new System.Windows.Forms.GroupBox();
             this.panel7 = new System.Windows.Forms.Panel();
@@ -61,14 +62,13 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.updStackInterDistance = new System.Windows.Forms.NumericUpDown();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.updCloserPictureDistance = new System.Windows.Forms.NumericUpDown();
             this.grpPreprocess = new System.Windows.Forms.GroupBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.updShrinkTimes = new System.Windows.Forms.NumericUpDown();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.label8 = new System.Windows.Forms.Label();
-            this.updCloserPictureDistance = new System.Windows.Forms.NumericUpDown();
-            this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
             this.menuStrip1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlOptions.SuspendLayout();
@@ -86,11 +86,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.updMultiResSteps)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updStackInterDistance)).BeginInit();
+            this.panel8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updCloserPictureDistance)).BeginInit();
             this.grpPreprocess.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updShrinkTimes)).BeginInit();
-            this.panel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updCloserPictureDistance)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -191,6 +191,15 @@
             this.pnlBottom.Name = "pnlBottom";
             this.pnlBottom.Size = new System.Drawing.Size(511, 27);
             this.pnlBottom.TabIndex = 3;
+            // 
+            // gaugeProgressBar1
+            // 
+            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gaugeProgressBar1.Label = "waiting";
+            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
+            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
+            this.gaugeProgressBar1.Size = new System.Drawing.Size(436, 27);
+            this.gaugeProgressBar1.TabIndex = 2;
             // 
             // pnlOptions
             // 
@@ -473,56 +482,6 @@
             0,
             0});
             // 
-            // grpPreprocess
-            // 
-            this.grpPreprocess.Controls.Add(this.panel5);
-            this.grpPreprocess.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpPreprocess.Location = new System.Drawing.Point(3, 3);
-            this.grpPreprocess.Name = "grpPreprocess";
-            this.grpPreprocess.Size = new System.Drawing.Size(505, 54);
-            this.grpPreprocess.TabIndex = 5;
-            this.grpPreprocess.TabStop = false;
-            this.grpPreprocess.Text = "Pre process";
-            // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(this.label5);
-            this.panel5.Controls.Add(this.updShrinkTimes);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel5.Location = new System.Drawing.Point(3, 16);
-            this.panel5.Name = "panel5";
-            this.panel5.Padding = new System.Windows.Forms.Padding(3);
-            this.panel5.Size = new System.Drawing.Size(499, 30);
-            this.panel5.TabIndex = 4;
-            // 
-            // label5
-            // 
-            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(3, 3);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(429, 24);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "shrink input image n times (1-10)";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // updShrinkTimes
-            // 
-            this.updShrinkTimes.Dock = System.Windows.Forms.DockStyle.Right;
-            this.updShrinkTimes.Location = new System.Drawing.Point(432, 3);
-            this.updShrinkTimes.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.updShrinkTimes.Name = "updShrinkTimes";
-            this.updShrinkTimes.Size = new System.Drawing.Size(64, 20);
-            this.updShrinkTimes.TabIndex = 8;
-            this.updShrinkTimes.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
             // panel8
             // 
             this.panel8.Controls.Add(this.label8);
@@ -573,14 +532,55 @@
             0,
             0});
             // 
-            // gaugeProgressBar1
+            // grpPreprocess
             // 
-            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gaugeProgressBar1.Label = "waiting";
-            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
-            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
-            this.gaugeProgressBar1.Size = new System.Drawing.Size(436, 27);
-            this.gaugeProgressBar1.TabIndex = 2;
+            this.grpPreprocess.Controls.Add(this.panel5);
+            this.grpPreprocess.Dock = System.Windows.Forms.DockStyle.Top;
+            this.grpPreprocess.Location = new System.Drawing.Point(3, 3);
+            this.grpPreprocess.Name = "grpPreprocess";
+            this.grpPreprocess.Size = new System.Drawing.Size(505, 54);
+            this.grpPreprocess.TabIndex = 5;
+            this.grpPreprocess.TabStop = false;
+            this.grpPreprocess.Text = "Pre process";
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.label5);
+            this.panel5.Controls.Add(this.updShrinkTimes);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel5.Location = new System.Drawing.Point(3, 16);
+            this.panel5.Name = "panel5";
+            this.panel5.Padding = new System.Windows.Forms.Padding(3);
+            this.panel5.Size = new System.Drawing.Size(499, 30);
+            this.panel5.TabIndex = 4;
+            // 
+            // label5
+            // 
+            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label5.Location = new System.Drawing.Point(3, 3);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(429, 24);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "shrink input image n times (1-10)";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updShrinkTimes
+            // 
+            this.updShrinkTimes.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updShrinkTimes.Location = new System.Drawing.Point(432, 3);
+            this.updShrinkTimes.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.updShrinkTimes.Name = "updShrinkTimes";
+            this.updShrinkTimes.Size = new System.Drawing.Size(64, 20);
+            this.updShrinkTimes.TabIndex = 8;
+            this.updShrinkTimes.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
             // MainForm
             // 
@@ -615,11 +615,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.updMultiResSteps)).EndInit();
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.updStackInterDistance)).EndInit();
+            this.panel8.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.updCloserPictureDistance)).EndInit();
             this.grpPreprocess.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.updShrinkTimes)).EndInit();
-            this.panel8.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.updCloserPictureDistance)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
