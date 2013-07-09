@@ -41,7 +41,6 @@ namespace DephtInition
         public float CurveReliabilityTreshold { get; set; } // TODO: make this dependant on parable's "aspect ratio"
         public int PreShrinkTimes { get; set; }
         public int CapHolesFilterEmisize { get; set; }
-        public int CapHolesFilterIterations { get; set; }
         public float CloserPictureDistance { get; set; }
 
         public MainForm()
@@ -71,7 +70,6 @@ namespace DephtInition
             CurveReliabilityTreshold = 0.2f;
             PreShrinkTimes = 1;
             CapHolesFilterEmisize = 6;
-            CapHolesFilterIterations = 3;
             StackInterDistance = 8;
             CloserPictureDistance = 100;
         }
@@ -179,19 +177,6 @@ namespace DephtInition
         {
             if ((bool)(btnGo.Tag) == false)
             {
-                // vvv MOVED TO FormLoad... done with DataBinding vvv
-                //
-                //_preShrinkTimes = (int)updShrinkTimes.Value;
-
-                //_stackInterDistance = (float)updStackInterDistance.Value;
-                //_multiResSteps = (int)updMultiResSteps.Value;
-                //_curveReliabilityTreshold = (float)updCurveReliabilityTreshold.Value;
-
-                //_spikeFilterTreshold = (float)updSpikeFilterTreshold.Value;
-
-                //_capHolesFilterEmisize = (int)updCapHolesSize.Value;
-                //_capHolesFilterIterations = (int)updCapHolesIterations.Value;
-
                 btnGo.Text = "cancel";
                 btnGo.Tag = true;
                 backgroundWorker1.RunWorkerAsync();
@@ -488,20 +473,17 @@ namespace DephtInition
             _maxMap = MapUtils.SpikesFilter(_maxMap, SpikeFilterTreshold);
 
             // cap holes
-            bool thereAreStillHoles = false;
-            for (int i = 0; i < CapHolesFilterIterations; ++i )
-            {
-                _maxMap = MapUtils.CapHoles(_maxMap, CapHolesFilterEmisize, out thereAreStillHoles);
-                if (!thereAreStillHoles)
-                {
-                    break;
-                }
-            }
-
+            _maxMap = MapUtils.CapHoles(_maxMap, CapHolesFilterEmisize);
+            
             // TODO: correct the bell-distorsion
 
-            // SAVE PLY 
+            savePLY();
 
+            //saveObj();
+        }
+
+        private void savePLY()
+        {
             int rw = _maxMap.W;
             int rh = _maxMap.H;
 
@@ -568,14 +550,8 @@ namespace DephtInition
                                     byte g = dstRow[i + 1];
                                     byte r = dstRow[i + 2];
 
-                                    
-                                    float pz = v * zk;
-
-                                    float perspCorr = (CloserPictureDistance + pz) / CloserPictureDistance;
-
-                                    float px = (((float)x * invScale + xOffs) * perspCorr * 200.0f); // TODO: fix once an for all conversions between virtual units and real world ones
-                                    float py = (((float)y * invScale + yOffs) * perspCorr * 200.0f);
-                                    pz = zOffs - pz;
+                                    float px, py, pz;
+                                    getPerspectiveCorrected3DPoint(x, y, out  px, out  py, out  pz);
 
                                     // write point
                                     sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0:0.000} {1:0.000} {2:0.000} {3} {4} {5}", px, py, pz, r, g, b));
@@ -591,8 +567,114 @@ namespace DephtInition
         }
 
         private void saveObj()
-        { 
-            
+        {
+            int rw = _maxMap.W;
+            int rh = _maxMap.H;
+
+            using (var sw = new StreamWriter(pickName("model", "obj")))
+            {
+                // write obj header
+                sw.WriteLine("# Obj generated with DephtInition by Giancarlo Todone");
+                
+                // write vertexes
+                for (int y = 0; y < rh; ++y)
+                {
+                    for (int x = 0; x < rw; ++x)
+                    {
+                        float px, py, pz;
+                        getPerspectiveCorrected3DPoint(x, y, out px, out py, out pz);
+
+                        // write point
+                        sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "v {0:0.000} {1:0.000} {2:0.000} 1.0", px, py, pz));
+                    }
+                }
+
+                for (int y = 0; y < rh; ++y)
+                {
+                    for (int x = 0; x < rw; ++x)
+                    {
+                        var v = _maxMap[x, y];
+                        float px = (float)x / (float)rw;
+                        float py = (float)y / (float)rh;
+
+                        // write tex coord
+                        sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "vt {0:0.000} {1:0.000} 0", px, py));
+                    }
+                }
+
+                // write normals
+
+                // TODO: handle first row here
+
+                for (int y = 1; y < rh - 1; ++y)
+                {
+                    // TODO: handle first column for current row here
+
+                    for (int x = 1; x < rw - 1; ++x)
+                    {
+                        float p1x, p1y, p1z, p2x, p2y, p2z, p3x, p3y, p3z, p4x, p4y, p4z,
+                            v3x, v3y, v3z;
+                        getPerspectiveCorrected3DPoint(x-1, y, out p1x, out p1y, out p1z);
+                        getPerspectiveCorrected3DPoint(x+1, y, out p2x, out p2y, out p2z);
+                        getPerspectiveCorrected3DPoint(x, y-1, out p3x, out p3y, out p3z);
+                        getPerspectiveCorrected3DPoint(x, y+1, out p4x, out p4y, out p4z);
+
+                        cross(p2x - p1x, p2y - p1y, p2z - p1z, p4x - p3x, p4y - p3y, p4z - p3z, out v3x, out v3y, out v3z);
+                        norm(ref v3x, ref v3y, ref v3z);
+
+                        // write normal
+                        sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "vn {0:0.000} {1:0.000} {2:0.000} 1.0", v3x, v3y, v3z));
+                    }
+                    // TODO: handle last column for current row here
+                }
+
+                // TODO: handle last row here
+
+                // TODO: write faces
+                //sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "f {0}/{1}/{2} {3}/{4}/{5} {6}/{7}/{8} ", ...));
+            }
+        }
+
+        void getPerspectiveCorrected3DPoint(int x, int y, out float px, out float py, out float pz)
+        {
+            // TODO: cache all these
+            int rw = _maxMap.W;
+            int rh = _maxMap.H;
+
+            var xk = _w / rw;
+            var yk = _h / rh;
+
+            float invScale = 1.0f / (float)Math.Max(rw, rh);
+            float xOffs = -0.5f * (float)rw * invScale;
+            float yOffs = -0.5f * (float)rh * invScale;
+            float zk = StackInterDistance;
+            float zOffs = StackInterDistance * (float)(_imgfs.Count) * 0.5f;
+
+
+
+            var v = _maxMap[x, y];
+            pz = v * zk;
+
+            float perspCorr = (CloserPictureDistance + pz) / CloserPictureDistance; // TODO: consider FOV for xy/z aspect
+
+            px = (((float)x * invScale + xOffs) * perspCorr * 200.0f); // TODO: fix once an for all conversions between virtual units and real world ones
+            py = (((float)y * invScale + yOffs) * perspCorr * 200.0f);
+            pz = zOffs - pz;
+        }
+
+        void norm(ref float x, ref float y, ref float z)
+        {
+            float d = (float)(1.0 / Math.Sqrt(x * x + y * y + z * z));
+            x = x * d;
+            y = y * d;
+            z = z * d;
+        }
+
+        void cross(float ax, float ay, float az, float bx, float by, float bz, out float cx, out float cy, out float cz)
+        {
+            cx = ay * bz - az * by;
+            cy = az * bx - ax * bz;
+            cz = ax * by - ay * bx;
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -651,7 +733,6 @@ namespace DephtInition
             updSpikeFilterTreshold.DataBindings.Add("Value", this, "SpikeFilterTreshold");
 
             updCapHolesSize.DataBindings.Add("Value", this, "CapHolesFilterEmisize");
-            updCapHolesIterations.DataBindings.Add("Value", this, "CapHolesFilterIterations");
         }
     }
 }

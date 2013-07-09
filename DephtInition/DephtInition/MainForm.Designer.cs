@@ -40,12 +40,8 @@
             this.dephtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.pnlBottom = new System.Windows.Forms.Panel();
-            this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
             this.pnlOptions = new System.Windows.Forms.Panel();
             this.grpPostprocess = new System.Windows.Forms.GroupBox();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.label7 = new System.Windows.Forms.Label();
-            this.updCapHolesIterations = new System.Windows.Forms.NumericUpDown();
             this.panel6 = new System.Windows.Forms.Panel();
             this.label6 = new System.Windows.Forms.Label();
             this.updCapHolesSize = new System.Windows.Forms.NumericUpDown();
@@ -69,12 +65,11 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.updShrinkTimes = new System.Windows.Forms.NumericUpDown();
+            this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
             this.menuStrip1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlOptions.SuspendLayout();
             this.grpPostprocess.SuspendLayout();
-            this.panel7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesIterations)).BeginInit();
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updCapHolesSize)).BeginInit();
             this.panel2.SuspendLayout();
@@ -192,15 +187,6 @@
             this.pnlBottom.Size = new System.Drawing.Size(511, 27);
             this.pnlBottom.TabIndex = 3;
             // 
-            // gaugeProgressBar1
-            // 
-            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gaugeProgressBar1.Label = "waiting";
-            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
-            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
-            this.gaugeProgressBar1.Size = new System.Drawing.Size(436, 27);
-            this.gaugeProgressBar1.TabIndex = 2;
-            // 
             // pnlOptions
             // 
             this.pnlOptions.Controls.Add(this.grpPostprocess);
@@ -215,55 +201,15 @@
             // 
             // grpPostprocess
             // 
-            this.grpPostprocess.Controls.Add(this.panel7);
             this.grpPostprocess.Controls.Add(this.panel6);
             this.grpPostprocess.Controls.Add(this.panel2);
             this.grpPostprocess.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpPostprocess.Location = new System.Drawing.Point(3, 206);
             this.grpPostprocess.Name = "grpPostprocess";
-            this.grpPostprocess.Size = new System.Drawing.Size(505, 112);
+            this.grpPostprocess.Size = new System.Drawing.Size(505, 87);
             this.grpPostprocess.TabIndex = 7;
             this.grpPostprocess.TabStop = false;
             this.grpPostprocess.Text = "Post process";
-            // 
-            // panel7
-            // 
-            this.panel7.Controls.Add(this.label7);
-            this.panel7.Controls.Add(this.updCapHolesIterations);
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel7.Location = new System.Drawing.Point(3, 76);
-            this.panel7.Name = "panel7";
-            this.panel7.Padding = new System.Windows.Forms.Padding(3);
-            this.panel7.Size = new System.Drawing.Size(499, 30);
-            this.panel7.TabIndex = 5;
-            // 
-            // label7
-            // 
-            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label7.Location = new System.Drawing.Point(3, 3);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(429, 24);
-            this.label7.TabIndex = 9;
-            this.label7.Text = "cap holes max filter iterations (1-10)";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // updCapHolesIterations
-            // 
-            this.updCapHolesIterations.Dock = System.Windows.Forms.DockStyle.Right;
-            this.updCapHolesIterations.Location = new System.Drawing.Point(432, 3);
-            this.updCapHolesIterations.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.updCapHolesIterations.Name = "updCapHolesIterations";
-            this.updCapHolesIterations.Size = new System.Drawing.Size(64, 20);
-            this.updCapHolesIterations.TabIndex = 8;
-            this.updCapHolesIterations.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
             // 
             // panel6
             // 
@@ -582,6 +528,15 @@
             0,
             0});
             // 
+            // gaugeProgressBar1
+            // 
+            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gaugeProgressBar1.Label = "waiting";
+            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
+            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
+            this.gaugeProgressBar1.Size = new System.Drawing.Size(436, 27);
+            this.gaugeProgressBar1.TabIndex = 2;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -602,8 +557,6 @@
             this.pnlBottom.ResumeLayout(false);
             this.pnlOptions.ResumeLayout(false);
             this.grpPostprocess.ResumeLayout(false);
-            this.panel7.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.updCapHolesIterations)).EndInit();
             this.panel6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.updCapHolesSize)).EndInit();
             this.panel2.ResumeLayout(false);
@@ -659,9 +612,6 @@
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown updShrinkTimes;
-        private System.Windows.Forms.Panel panel7;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.NumericUpDown updCapHolesIterations;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.NumericUpDown updCapHolesSize;

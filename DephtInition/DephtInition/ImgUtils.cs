@@ -793,7 +793,17 @@ namespace DephtInition
         // Caps holes taking values (weighted by distance) from neighborhood
         // for interpolation; filter can cap holes as large as filterHalfSize*2;
         // multiple passes could be needed.
-        public static FloatMap CapHoles(FloatMap imgfIn, int filterHalfSize, out bool thereAreStillHoles)
+        public static FloatMap CapHoles(FloatMap imgfIn, int filterHalfSize)
+        {
+            bool thereAreStillHoles = true;
+            while (thereAreStillHoles)
+            {
+                imgfIn = MapUtils.capHoles(imgfIn, filterHalfSize, out thereAreStillHoles);
+            }
+            return imgfIn;
+        }
+
+        static FloatMap capHoles(FloatMap imgfIn, int filterHalfSize, out bool thereAreStillHoles)
         {
             thereAreStillHoles = false;
             FloatMap filter = getDistanceWeightMap(filterHalfSize);
