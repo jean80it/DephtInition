@@ -40,6 +40,7 @@
             this.dephtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.pnlBottom = new System.Windows.Forms.Panel();
+            this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
             this.pnlOptions = new System.Windows.Forms.Panel();
             this.grpPostprocess = new System.Windows.Forms.GroupBox();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -65,7 +66,6 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.updShrinkTimes = new System.Windows.Forms.NumericUpDown();
-            this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
             this.menuStrip1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlOptions.SuspendLayout();
@@ -187,6 +187,15 @@
             this.pnlBottom.Size = new System.Drawing.Size(511, 27);
             this.pnlBottom.TabIndex = 3;
             // 
+            // gaugeProgressBar1
+            // 
+            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gaugeProgressBar1.Label = "waiting";
+            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
+            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
+            this.gaugeProgressBar1.Size = new System.Drawing.Size(436, 27);
+            this.gaugeProgressBar1.TabIndex = 2;
+            // 
             // pnlOptions
             // 
             this.pnlOptions.Controls.Add(this.grpPostprocess);
@@ -245,7 +254,7 @@
             this.updCapHolesSize.Size = new System.Drawing.Size(64, 20);
             this.updCapHolesSize.TabIndex = 8;
             this.updCapHolesSize.Value = new decimal(new int[] {
-            6,
+            10,
             0,
             0,
             0});
@@ -285,10 +294,10 @@
             this.updSpikeFilterTreshold.Size = new System.Drawing.Size(64, 20);
             this.updSpikeFilterTreshold.TabIndex = 6;
             this.updSpikeFilterTreshold.Value = new decimal(new int[] {
-            2,
+            18,
             0,
             0,
-            0});
+            65536});
             // 
             // grpProcess
             // 
@@ -322,13 +331,18 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(429, 24);
             this.label4.TabIndex = 9;
-            this.label4.Text = "curve raliability treshold (0.1-10)";
+            this.label4.Text = "curve reliability treshold (0.1-10)";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // updCurveReliabilityTreshold
             // 
             this.updCurveReliabilityTreshold.DecimalPlaces = 1;
             this.updCurveReliabilityTreshold.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updCurveReliabilityTreshold.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.updCurveReliabilityTreshold.Location = new System.Drawing.Point(432, 3);
             this.updCurveReliabilityTreshold.Maximum = new decimal(new int[] {
             10,
@@ -527,15 +541,6 @@
             0,
             0,
             0});
-            // 
-            // gaugeProgressBar1
-            // 
-            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gaugeProgressBar1.Label = "waiting";
-            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
-            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
-            this.gaugeProgressBar1.Size = new System.Drawing.Size(436, 27);
-            this.gaugeProgressBar1.TabIndex = 2;
             // 
             // MainForm
             // 

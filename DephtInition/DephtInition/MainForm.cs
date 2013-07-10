@@ -65,11 +65,11 @@ namespace DephtInition
 
             btnGo.Tag = false;
 
-            SpikeFilterTreshold = 2.0f;
+            SpikeFilterTreshold = 1.8f;
             MultiResSteps = 3;
             CurveReliabilityTreshold = 0.2f;
             PreShrinkTimes = 1;
-            CapHolesFilterEmisize = 6;
+            CapHolesFilterEmisize = 10;
             StackInterDistance = 8;
             CloserPictureDistance = 100;
         }
@@ -479,7 +479,7 @@ namespace DephtInition
 
             savePLY();
 
-            //saveObj();
+            saveObj();
         }
 
         private void savePLY()
@@ -575,11 +575,11 @@ namespace DephtInition
             {
                 // write obj header
                 sw.WriteLine("# Obj generated with DephtInition by Giancarlo Todone");
-                
+
                 // write vertexes
-                for (int y = 0; y < rh; ++y)
+                for (int y = 1; y < rh - 1; ++y)
                 {
-                    for (int x = 0; x < rw; ++x)
+                    for (int x = 1; x < rw - 1; ++x)
                     {
                         float px, py, pz;
                         getPerspectiveCorrected3DPoint(x, y, out px, out py, out pz);
@@ -589,9 +589,10 @@ namespace DephtInition
                     }
                 }
 
-                for (int y = 0; y < rh; ++y)
+                // write texture coordinates
+                for (int y = 1; y < rh - 1; ++y)
                 {
-                    for (int x = 0; x < rw; ++x)
+                    for (int x = 1; x < rw - 1; ++x)
                     {
                         var v = _maxMap[x, y];
                         float px = (float)x / (float)rw;
@@ -603,21 +604,16 @@ namespace DephtInition
                 }
 
                 // write normals
-
-                // TODO: handle first row here
-
                 for (int y = 1; y < rh - 1; ++y)
                 {
-                    // TODO: handle first column for current row here
-
                     for (int x = 1; x < rw - 1; ++x)
                     {
                         float p1x, p1y, p1z, p2x, p2y, p2z, p3x, p3y, p3z, p4x, p4y, p4z,
                             v3x, v3y, v3z;
-                        getPerspectiveCorrected3DPoint(x-1, y, out p1x, out p1y, out p1z);
-                        getPerspectiveCorrected3DPoint(x+1, y, out p2x, out p2y, out p2z);
-                        getPerspectiveCorrected3DPoint(x, y-1, out p3x, out p3y, out p3z);
-                        getPerspectiveCorrected3DPoint(x, y+1, out p4x, out p4y, out p4z);
+                        getPerspectiveCorrected3DPoint(x - 1, y, out p1x, out p1y, out p1z);
+                        getPerspectiveCorrected3DPoint(x + 1, y, out p2x, out p2y, out p2z);
+                        getPerspectiveCorrected3DPoint(x, y - 1, out p3x, out p3y, out p3z);
+                        getPerspectiveCorrected3DPoint(x, y + 1, out p4x, out p4y, out p4z);
 
                         cross(p2x - p1x, p2y - p1y, p2z - p1z, p4x - p3x, p4y - p3y, p4z - p3z, out v3x, out v3y, out v3z);
                         norm(ref v3x, ref v3y, ref v3z);
@@ -625,13 +621,22 @@ namespace DephtInition
                         // write normal
                         sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "vn {0:0.000} {1:0.000} {2:0.000} 1.0", v3x, v3y, v3z));
                     }
-                    // TODO: handle last column for current row here
                 }
 
-                // TODO: handle last row here
-
-                // TODO: write faces
-                //sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "f {0}/{1}/{2} {3}/{4}/{5} {6}/{7}/{8} ", ...));
+                // write faces
+                int rw2 = rw - 2;
+                for (int y = 0; y < rh - 3; ++y)
+                {
+                    for (int x = 0; x < rw - 3; ++x)
+                    {
+                        int i1 = x + y * rw2 + 1;
+                        int i2 = i1 + 1;
+                        int i3 = i2 + rw2;
+                        int i4 = i1 + rw2;
+                        sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "f {0}/{1}/{2} {3}/{4}/{5} {6}/{7}/{8} ", i1, i1, i1, i2, i2, i2, i3, i3, i3));
+                        sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "f {0}/{1}/{2} {3}/{4}/{5} {6}/{7}/{8} ", i1, i1, i1, i3, i3, i3, i4, i4, i4));
+                    }
+                }
             }
         }
 
