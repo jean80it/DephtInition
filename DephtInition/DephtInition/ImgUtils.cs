@@ -180,7 +180,7 @@ namespace DephtInition
             var img = imgfIn;
             for (int i = 0; i < subSamples; ++i)
             {
-                var rc = ResizeMap(BlurMap(GetContrastMap(img)), w, h);
+                var rc = ResizeMap(FastBlurMap(GetContrastMap(img)), w, h);
                 //var rc = DoubleImg(BlurImg(GetContrImg(img)), i); // <-- multi step reduction would still be first choice with openCl
                 Accumulate(contr, rc, k);
                 k *= 0.5f;
@@ -410,7 +410,7 @@ namespace DephtInition
         // should be modified in order to use a true gaussian kernel;
         // is left as is because shortly all convolution-like functions
         // will be handled by a single method (possibly with OpenCL)
-        public static FloatMap BlurMap(FloatMap imgfIn)
+        public static FloatMap FastBlurMap(FloatMap imgfIn)
         {
             int h = imgfIn.H;
             int w = imgfIn.W;
@@ -805,9 +805,14 @@ namespace DephtInition
 
         static FloatMap capHoles(FloatMap imgfIn, int filterHalfSize, out bool thereAreStillHoles)
         {
+            return convolute(imgfIn, getDistanceWeightMap(filterHalfSize), out thereAreStillHoles);
+        }
+
+        static FloatMap convolute(FloatMap imgfIn, FloatMap filter, out bool thereAreStillHoles)
+        {
             thereAreStillHoles = false;
-            FloatMap filter = getDistanceWeightMap(filterHalfSize);
-            int filterSize = filterHalfSize * 2 +1; 
+            int filterSize = filter.W;
+            int filterHalfSize = filterSize / 2;
 
             int h = imgfIn.H;
             int w = imgfIn.W;
@@ -869,6 +874,13 @@ namespace DephtInition
             return imgfOut;
         }
 
+        public static FloatMap GaussianBlur(FloatMap imgfIn, float sigma)
+        {
+            FloatMap blurMask = createBlurMask(sigma);
+            bool dummy;
+            return convolute(imgfIn, blurMask, out dummy);
+        }
+
         private static FloatMap getDistanceWeightMap(int filterHalfSize)
         {
             int size = filterHalfSize * 2 + 1;
@@ -887,6 +899,37 @@ namespace DephtInition
             wMap[filterHalfSize, filterHalfSize] = 0;
 
             return wMap;
+        }
+
+        // http://www.thebigblob.com/gaussian-blur-using-opencl-and-the-built-in-images-textures/
+        // http://haishibai.blogspot.it/2009/09/image-processing-c-tutorial-4-gaussian.html
+        static FloatMap createBlurMask(float sigma)
+        {
+            int maskSize = (int)Math.Ceiling(3.0f * sigma);
+            int _2maskSizePlus1 = (maskSize << 1) + 1; // stupid C# compiler gives precedence to sum
+            FloatMap mask = new FloatMap(_2maskSizePlus1, _2maskSizePlus1);
+            float sum = 0.0f;
+            float temp = 0.0f;
+            float _2sigmaSqrInvNeg = -1 / (sigma * sigma * 2);
+
+            for (int a = -maskSize; a <= maskSize; ++a)
+            {
+                for (int b = -maskSize; b <= maskSize; ++b)
+                {
+                    temp = (float)Math.Exp(((float)(a * a + b * b) * _2sigmaSqrInvNeg));
+                    sum += temp;
+                    mask[a + maskSize + (b + maskSize) * _2maskSizePlus1] = temp;
+                }
+            }
+            
+            // Normalize the mask
+            int _2maskSizePlus1Sqr = _2maskSizePlus1 * _2maskSizePlus1;
+            for (int i = 0; i < _2maskSizePlus1Sqr; ++i)
+            {
+                mask[i] = mask[i] / sum;
+            }
+
+            return mask;
         }
     }
 }

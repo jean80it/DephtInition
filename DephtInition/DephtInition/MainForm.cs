@@ -42,6 +42,9 @@ namespace DephtInition
         public int PreShrinkTimes { get; set; }
         public int CapHolesFilterEmisize { get; set; }
         public float CloserPictureDistance { get; set; }
+        public float BlurSigma { get; set; }
+        public int BlurTimes { get; set; }
+        public int ShrinkContrastTimes { get; set; }
 
         public MainForm()
         {
@@ -72,6 +75,9 @@ namespace DephtInition
             CapHolesFilterEmisize = 10;
             StackInterDistance = 8;
             CloserPictureDistance = 100;
+            BlurSigma = 1.8f;
+            BlurTimes = 3;
+            ShrinkContrastTimes = 5;
         }
 
         void checkSpikes(object sender, MouseEventArgs e)
@@ -448,7 +454,7 @@ namespace DephtInition
             foreach (var imgf in _imgfs)
             {
                 // get contrast, then shrink result (averaging pixels)
-                FloatMap newImgf = MapUtils.HalfMap(MapUtils.GetMultiResContrastEvaluation(imgf, MultiResSteps), 4);
+                FloatMap newImgf = MapUtils.HalfMap(MapUtils.GetMultiResContrastEvaluation(imgf, MultiResSteps), ShrinkContrastTimes);
 
                 newImgfs.Add(newImgf);
 
@@ -468,6 +474,12 @@ namespace DephtInition
             smoothDepht(); smoothDepht();
 
             _maxMap = getMaxMap();
+
+            // smooth
+            for (int i = 0; i < BlurTimes; ++i)
+            {
+                _maxMap = MapUtils.GaussianBlur(_maxMap, BlurSigma);
+            }
 
             // filter out spikes
             _maxMap = MapUtils.SpikesFilter(_maxMap, SpikeFilterTreshold);
@@ -738,6 +750,11 @@ namespace DephtInition
             updSpikeFilterTreshold.DataBindings.Add("Value", this, "SpikeFilterTreshold");
 
             updCapHolesSize.DataBindings.Add("Value", this, "CapHolesFilterEmisize");
+
+            updBlurSigma.DataBindings.Add("Value", this, "BlurSigma");
+            updBlurTimes.DataBindings.Add("Value", this, "BlurTimes");
+
+            updShrinkContrastTimes.DataBindings.Add("Value", this, "ShrinkContrastTimes");
         }
     }
 }

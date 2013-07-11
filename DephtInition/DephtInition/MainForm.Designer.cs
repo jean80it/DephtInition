@@ -40,7 +40,6 @@
             this.dephtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.pnlBottom = new System.Windows.Forms.Panel();
-            this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
             this.pnlOptions = new System.Windows.Forms.Panel();
             this.grpPostprocess = new System.Windows.Forms.GroupBox();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -66,6 +65,16 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.updShrinkTimes = new System.Windows.Forms.NumericUpDown();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.updBlurSigma = new System.Windows.Forms.NumericUpDown();
+            this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.updBlurTimes = new System.Windows.Forms.NumericUpDown();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.updShrinkContrastTimes = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlOptions.SuspendLayout();
@@ -86,6 +95,12 @@
             this.grpPreprocess.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.updShrinkTimes)).BeginInit();
+            this.panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updBlurSigma)).BeginInit();
+            this.panel9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updBlurTimes)).BeginInit();
+            this.panel10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.updShrinkContrastTimes)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -182,19 +197,10 @@
             this.pnlBottom.Controls.Add(this.gaugeProgressBar1);
             this.pnlBottom.Controls.Add(this.btnGo);
             this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlBottom.Location = new System.Drawing.Point(0, 405);
+            this.pnlBottom.Location = new System.Drawing.Point(0, 448);
             this.pnlBottom.Name = "pnlBottom";
             this.pnlBottom.Size = new System.Drawing.Size(511, 27);
             this.pnlBottom.TabIndex = 3;
-            // 
-            // gaugeProgressBar1
-            // 
-            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gaugeProgressBar1.Label = "waiting";
-            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
-            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
-            this.gaugeProgressBar1.Size = new System.Drawing.Size(436, 27);
-            this.gaugeProgressBar1.TabIndex = 2;
             // 
             // pnlOptions
             // 
@@ -205,17 +211,19 @@
             this.pnlOptions.Location = new System.Drawing.Point(0, 24);
             this.pnlOptions.Name = "pnlOptions";
             this.pnlOptions.Padding = new System.Windows.Forms.Padding(3);
-            this.pnlOptions.Size = new System.Drawing.Size(511, 381);
+            this.pnlOptions.Size = new System.Drawing.Size(511, 424);
             this.pnlOptions.TabIndex = 10;
             // 
             // grpPostprocess
             // 
+            this.grpPostprocess.Controls.Add(this.panel9);
+            this.grpPostprocess.Controls.Add(this.panel7);
             this.grpPostprocess.Controls.Add(this.panel6);
             this.grpPostprocess.Controls.Add(this.panel2);
             this.grpPostprocess.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpPostprocess.Location = new System.Drawing.Point(3, 206);
+            this.grpPostprocess.Location = new System.Drawing.Point(3, 234);
             this.grpPostprocess.Name = "grpPostprocess";
-            this.grpPostprocess.Size = new System.Drawing.Size(505, 87);
+            this.grpPostprocess.Size = new System.Drawing.Size(505, 133);
             this.grpPostprocess.TabIndex = 7;
             this.grpPostprocess.TabStop = false;
             this.grpPostprocess.Text = "Post process";
@@ -301,6 +309,7 @@
             // 
             // grpProcess
             // 
+            this.grpProcess.Controls.Add(this.panel10);
             this.grpProcess.Controls.Add(this.panel4);
             this.grpProcess.Controls.Add(this.panel3);
             this.grpProcess.Controls.Add(this.panel1);
@@ -308,7 +317,7 @@
             this.grpProcess.Dock = System.Windows.Forms.DockStyle.Top;
             this.grpProcess.Location = new System.Drawing.Point(3, 57);
             this.grpProcess.Name = "grpProcess";
-            this.grpProcess.Size = new System.Drawing.Size(505, 149);
+            this.grpProcess.Size = new System.Drawing.Size(505, 177);
             this.grpProcess.TabIndex = 6;
             this.grpProcess.TabStop = false;
             this.grpProcess.Text = "Process";
@@ -542,11 +551,138 @@
             0,
             0});
             // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.label7);
+            this.panel7.Controls.Add(this.updBlurSigma);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel7.Location = new System.Drawing.Point(3, 76);
+            this.panel7.Name = "panel7";
+            this.panel7.Padding = new System.Windows.Forms.Padding(3);
+            this.panel7.Size = new System.Drawing.Size(499, 30);
+            this.panel7.TabIndex = 5;
+            // 
+            // label7
+            // 
+            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label7.Location = new System.Drawing.Point(3, 3);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(429, 24);
+            this.label7.TabIndex = 7;
+            this.label7.Text = "blur sigma";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updBlurSigma
+            // 
+            this.updBlurSigma.DecimalPlaces = 1;
+            this.updBlurSigma.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updBlurSigma.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.updBlurSigma.Location = new System.Drawing.Point(432, 3);
+            this.updBlurSigma.Name = "updBlurSigma";
+            this.updBlurSigma.Size = new System.Drawing.Size(64, 20);
+            this.updBlurSigma.TabIndex = 6;
+            this.updBlurSigma.Value = new decimal(new int[] {
+            18,
+            0,
+            0,
+            65536});
+            // 
+            // gaugeProgressBar1
+            // 
+            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gaugeProgressBar1.Label = "waiting";
+            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
+            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
+            this.gaugeProgressBar1.Size = new System.Drawing.Size(436, 27);
+            this.gaugeProgressBar1.TabIndex = 2;
+            // 
+            // panel9
+            // 
+            this.panel9.Controls.Add(this.label9);
+            this.panel9.Controls.Add(this.updBlurTimes);
+            this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel9.Location = new System.Drawing.Point(3, 106);
+            this.panel9.Name = "panel9";
+            this.panel9.Padding = new System.Windows.Forms.Padding(3);
+            this.panel9.Size = new System.Drawing.Size(499, 30);
+            this.panel9.TabIndex = 6;
+            // 
+            // label9
+            // 
+            this.label9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label9.Location = new System.Drawing.Point(3, 3);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(429, 24);
+            this.label9.TabIndex = 9;
+            this.label9.Text = "blur repeat times";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updBlurTimes
+            // 
+            this.updBlurTimes.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updBlurTimes.Location = new System.Drawing.Point(432, 3);
+            this.updBlurTimes.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.updBlurTimes.Name = "updBlurTimes";
+            this.updBlurTimes.Size = new System.Drawing.Size(64, 20);
+            this.updBlurTimes.TabIndex = 8;
+            this.updBlurTimes.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            // 
+            // panel10
+            // 
+            this.panel10.Controls.Add(this.label10);
+            this.panel10.Controls.Add(this.updShrinkContrastTimes);
+            this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel10.Location = new System.Drawing.Point(3, 136);
+            this.panel10.Name = "panel10";
+            this.panel10.Padding = new System.Windows.Forms.Padding(3);
+            this.panel10.Size = new System.Drawing.Size(499, 30);
+            this.panel10.TabIndex = 6;
+            // 
+            // label10
+            // 
+            this.label10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label10.Location = new System.Drawing.Point(3, 3);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(429, 24);
+            this.label10.TabIndex = 9;
+            this.label10.Text = "shrink contrast map n times";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // updShrinkContrastTimes
+            // 
+            this.updShrinkContrastTimes.Dock = System.Windows.Forms.DockStyle.Right;
+            this.updShrinkContrastTimes.Location = new System.Drawing.Point(432, 3);
+            this.updShrinkContrastTimes.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.updShrinkContrastTimes.Name = "updShrinkContrastTimes";
+            this.updShrinkContrastTimes.Size = new System.Drawing.Size(64, 20);
+            this.updShrinkContrastTimes.TabIndex = 8;
+            this.updShrinkContrastTimes.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(511, 432);
+            this.ClientSize = new System.Drawing.Size(511, 475);
             this.Controls.Add(this.pnlOptions);
             this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.menuStrip1);
@@ -578,6 +714,12 @@
             this.grpPreprocess.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.updShrinkTimes)).EndInit();
+            this.panel7.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.updBlurSigma)).EndInit();
+            this.panel9.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.updBlurTimes)).EndInit();
+            this.panel10.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.updShrinkContrastTimes)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -623,6 +765,15 @@
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown updCloserPictureDistance;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown updBlurSigma;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown updBlurTimes;
+        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.NumericUpDown updShrinkContrastTimes;
     }
 }
 
