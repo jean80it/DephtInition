@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DephtInition.Properties {
+namespace DepthInition.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

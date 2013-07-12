@@ -12,7 +12,7 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
-//          DephtInition allows to extract a 3d model from a 
+//          DepthInition allows to extract a 3d model from a 
 //          focus stack (i.e. a number of pictures showing
 //          the exact same scene exception made for the focus 
 //          distance being slightly moved between shots)
@@ -24,7 +24,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace DephtInition
+namespace DepthInition
 {
     static class Program
     {

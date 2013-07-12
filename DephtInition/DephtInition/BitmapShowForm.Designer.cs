@@ -1,4 +1,4 @@
-﻿namespace DephtInition
+﻿namespace DepthInition
 {
     partial class BitmapShowForm
     {

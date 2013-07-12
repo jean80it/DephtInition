@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DephtInition
+namespace DepthInition
 {
     public partial class ValuesGraphForm : Form
     {
