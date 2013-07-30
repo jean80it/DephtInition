@@ -1,4 +1,4 @@
-﻿namespace DephtInition
+﻿namespace DepthInition
 {
     partial class MainForm
     {
@@ -36,11 +36,15 @@
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rGBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contrastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pointDephtGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dephtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pointDepthGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.depthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.pnlBottom = new System.Windows.Forms.Panel();
+<<<<<<< HEAD
             this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
+=======
+            this.gaugeProgressBar1 = new DepthInition.GaugeProgressBar();
+>>>>>>> b32dfdf5f5dbd672c2adb55e9df7f25bef7023cd
             this.pnlOptions = new System.Windows.Forms.Panel();
             this.grpPostprocess = new System.Windows.Forms.GroupBox();
             this.panel9 = new System.Windows.Forms.Panel();
@@ -150,8 +154,8 @@
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.rGBToolStripMenuItem,
             this.contrastToolStripMenuItem,
-            this.pointDephtGraphToolStripMenuItem,
-            this.dephtToolStripMenuItem});
+            this.pointDepthGraphToolStripMenuItem,
+            this.depthToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "View";
@@ -170,19 +174,19 @@
             this.contrastToolStripMenuItem.Text = "Contrast";
             this.contrastToolStripMenuItem.Click += new System.EventHandler(this.contrastToolStripMenuItem_Click);
             // 
-            // pointDephtGraphToolStripMenuItem
+            // pointDepthGraphToolStripMenuItem
             // 
-            this.pointDephtGraphToolStripMenuItem.Name = "pointDephtGraphToolStripMenuItem";
-            this.pointDephtGraphToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.pointDephtGraphToolStripMenuItem.Text = "Point Depht Graph";
-            this.pointDephtGraphToolStripMenuItem.Click += new System.EventHandler(this.pointDephtGraphToolStripMenuItem_Click);
+            this.pointDepthGraphToolStripMenuItem.Name = "pointDepthGraphToolStripMenuItem";
+            this.pointDepthGraphToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.pointDepthGraphToolStripMenuItem.Text = "Point Depth Graph";
+            this.pointDepthGraphToolStripMenuItem.Click += new System.EventHandler(this.pointDepthGraphToolStripMenuItem_Click);
             // 
-            // dephtToolStripMenuItem
+            // depthToolStripMenuItem
             // 
-            this.dephtToolStripMenuItem.Name = "dephtToolStripMenuItem";
-            this.dephtToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
-            this.dephtToolStripMenuItem.Text = "Depht";
-            this.dephtToolStripMenuItem.Click += new System.EventHandler(this.dephtToolStripMenuItem_Click);
+            this.depthToolStripMenuItem.Name = "depthToolStripMenuItem";
+            this.depthToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.depthToolStripMenuItem.Text = "Depth";
+            this.depthToolStripMenuItem.Click += new System.EventHandler(this.depthToolStripMenuItem_Click);
             // 
             // backgroundWorker1
             // 
@@ -690,7 +694,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(270, 176);
             this.Name = "MainForm";
-            this.Text = "DephtInition";
+            this.Text = "DepthInition";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
             this.menuStrip1.ResumeLayout(false);
@@ -735,10 +739,10 @@
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rGBToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem contrastToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pointDephtGraphToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem dephtToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pointDepthGraphToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem depthToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private DephtInition.GaugeProgressBar gaugeProgressBar1;
+        private DepthInition.GaugeProgressBar gaugeProgressBar1;
         private System.Windows.Forms.Panel pnlBottom;
         private System.Windows.Forms.Panel pnlOptions;
         private System.Windows.Forms.GroupBox grpPostprocess;

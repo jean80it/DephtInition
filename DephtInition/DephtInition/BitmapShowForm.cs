@@ -18,7 +18,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DephtInition
+namespace DepthInition
 {
     public partial class BitmapShowForm : Form
     {

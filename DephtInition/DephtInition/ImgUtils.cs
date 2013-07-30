@@ -18,7 +18,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace DephtInition
+namespace DepthInition
 {
     class FloatMap
     {
@@ -529,8 +529,8 @@ namespace DephtInition
             return bmp;
         }
 
-        // Creates the blue-red depht map
-        public static Bitmap Map2BmpDephtMap(FloatMap imgf, float k, int count)
+        // Creates the blue-red depth map
+        public static Bitmap Map2BmpDepthMap(FloatMap imgf, float k, int count)
         {
             int h = imgf.H;
             int w = imgf.W;

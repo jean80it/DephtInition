@@ -18,7 +18,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DephtInition
+namespace DepthInition
 {
     // sorry for bad naming, but this has been stolen from another project of mine ^__^
     public class GaugeProgressBar : ProgressBar

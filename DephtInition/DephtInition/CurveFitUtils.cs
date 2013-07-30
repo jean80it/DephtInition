@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace DephtInition
+namespace DepthInition
 {
     // following code slightly modified from
     // http://blog.csharphelper.com/2010/11/08/find-a-polynomial-least-squares-fit-for-a-set-of-points-in-c.aspx

@@ -23,13 +23,13 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
-namespace DephtInition
+namespace DepthInition
 {
     public partial class MainForm : Form
     {
         BitmapShowForm _showContrForm;
         BitmapShowForm _showRGBForm;
-        BitmapShowForm _showDepthForm;
+        BitmapShowForm _showdepthForm;
         ValuesGraphForm _graphForm;
 
         FloatMap _maxMap = null; // TODO: introduce middle step "raw map"
@@ -55,8 +55,8 @@ namespace DephtInition
             _showRGBForm = new BitmapShowForm() { Text = "RGB" };
             _showRGBForm.Show();
 
-            _showDepthForm = new BitmapShowForm() { Text = "Depht (approx)" };
-            _showDepthForm.Show();
+            _showdepthForm = new BitmapShowForm() { Text = "Depth (approx)" };
+            _showdepthForm.Show();
 
             _graphForm = new ValuesGraphForm() { Text = "graph"};
             _graphForm.Show();
@@ -64,7 +64,7 @@ namespace DephtInition
             _showRGBForm.pnlDisplayBitmap.MouseDown += new MouseEventHandler(pnlDisplayBitmap_MouseDown);
             _showContrForm.pnlDisplayBitmap.MouseDown += new MouseEventHandler(pnlDisplayBitmap_MouseDown);
 
-            _showDepthForm.pnlDisplayBitmap.MouseDown += new MouseEventHandler(checkSpikes);
+            _showdepthForm.pnlDisplayBitmap.MouseDown += new MouseEventHandler(checkSpikes);
 
             btnGo.Tag = false;
 
@@ -243,14 +243,14 @@ namespace DephtInition
                 for (int x = 0; x < w; ++x )
                 {
                     float v = getMaxIdx(x, y);
-                    imgfOut[x, y] = v;// < 0 ? -1 : 255 - v * 255 / _imgfs.Count; // MOVED into map2BmpDepht
+                    imgfOut[x, y] = v;// < 0 ? -1 : 255 - v * 255 / _imgfs.Count; // MOVED into map2BmpDepth
                 }            
             }
 
             return imgfOut;
         }
 
-        void smoothDepht()
+        void smoothDepth()
         {
             int h = _imgfs[0].H;
             int w = _imgfs[0].W;
@@ -376,16 +376,16 @@ namespace DephtInition
             _showContrForm.Focus();
         }
 
-        private void pointDephtGraphToolStripMenuItem_Click(object sender, EventArgs e)
+        private void pointDepthGraphToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _graphForm.Show();
             _graphForm.Focus();
         }
 
-        private void dephtToolStripMenuItem_Click(object sender, EventArgs e)
+        private void depthToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _showDepthForm.Show();
-            _showDepthForm.Focus();
+            _showdepthForm.Show();
+            _showdepthForm.Focus();
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
@@ -471,7 +471,7 @@ namespace DephtInition
 
             _imgfs = newImgfs;
 
-            smoothDepht(); smoothDepht();
+            smoothDepth(); smoothDepth();
 
             _maxMap = getMaxMap();
 
@@ -528,7 +528,7 @@ namespace DephtInition
                     // write ply header
                     sw.WriteLine("ply");
                     sw.WriteLine("format ascii 1.0");
-                    sw.WriteLine("comment PLY generated with DephtInition by Giancarlo Todone");
+                    sw.WriteLine("comment PLY generated with DepthInition by Giancarlo Todone");
                     sw.WriteLine("element vertex " + count);
                     sw.WriteLine("property float x");
                     sw.WriteLine("property float y");
@@ -586,7 +586,7 @@ namespace DephtInition
             using (var sw = new StreamWriter(pickName("model", "obj")))
             {
                 // write obj header
-                sw.WriteLine("# Obj generated with DephtInition by Giancarlo Todone");
+                sw.WriteLine("# Obj generated with DepthInition by Giancarlo Todone");
 
                 // write vertexes
                 for (int y = 1; y < rh - 1; ++y)
@@ -727,7 +727,7 @@ namespace DephtInition
                 try
                 {
                     DisplayedBmpIdx = 0;
-                    _showDepthForm.DisplayedBitmap = MapUtils.Map2BmpDephtMap(_maxMap, 1, _imgfs.Count);
+                    _showdepthForm.DisplayedBitmap = MapUtils.Map2BmpDepthMap(_maxMap, 1, _imgfs.Count);
                 }
                 catch { }
                 gaugeProgressBar1.Label = "done";
