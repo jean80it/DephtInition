@@ -675,8 +675,8 @@ namespace DephtInition
             float perspCorr = (CloserPictureDistance + pz) / CloserPictureDistance; // TODO: consider FOV for xy/z aspect
 
             px = (((float)x * invScale + xOffs) * perspCorr * 200.0f); // TODO: fix once an for all conversions between virtual units and real world ones
-            py = (((float)y * invScale + yOffs) * perspCorr * 200.0f);
-            pz = zOffs - pz;
+            py = -(((float)y * invScale + yOffs) * perspCorr * 200.0f);
+            pz = zOffs - pz; 
         }
 
         void norm(ref float x, ref float y, ref float z)
