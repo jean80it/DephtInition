@@ -40,11 +40,6 @@
             this.depthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.pnlBottom = new System.Windows.Forms.Panel();
-<<<<<<< HEAD
-            this.gaugeProgressBar1 = new DephtInition.GaugeProgressBar();
-=======
-            this.gaugeProgressBar1 = new DepthInition.GaugeProgressBar();
->>>>>>> b32dfdf5f5dbd672c2adb55e9df7f25bef7023cd
             this.pnlOptions = new System.Windows.Forms.Panel();
             this.grpPostprocess = new System.Windows.Forms.GroupBox();
             this.panel9 = new System.Windows.Forms.Panel();
@@ -79,6 +74,7 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
             this.updShrinkTimes = new System.Windows.Forms.NumericUpDown();
+            this.gaugeProgressBar1 = new DepthInition.GaugeProgressBar();
             this.menuStrip1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.pnlOptions.SuspendLayout();
@@ -206,15 +202,6 @@
             this.pnlBottom.Size = new System.Drawing.Size(511, 27);
             this.pnlBottom.TabIndex = 3;
             // 
-            // gaugeProgressBar1
-            // 
-            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gaugeProgressBar1.Label = "waiting";
-            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
-            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
-            this.gaugeProgressBar1.Size = new System.Drawing.Size(436, 27);
-            this.gaugeProgressBar1.TabIndex = 2;
-            // 
             // pnlOptions
             // 
             this.pnlOptions.Controls.Add(this.grpPostprocess);
@@ -275,7 +262,7 @@
             this.updBlurTimes.Size = new System.Drawing.Size(64, 20);
             this.updBlurTimes.TabIndex = 8;
             this.updBlurTimes.Value = new decimal(new int[] {
-            3,
+            1,
             0,
             0,
             0});
@@ -354,7 +341,7 @@
             this.updCapHolesSize.Size = new System.Drawing.Size(64, 20);
             this.updCapHolesSize.TabIndex = 8;
             this.updCapHolesSize.Value = new decimal(new int[] {
-            10,
+            5,
             0,
             0,
             0});
@@ -448,7 +435,7 @@
             this.updShrinkContrastTimes.Size = new System.Drawing.Size(64, 20);
             this.updShrinkContrastTimes.TabIndex = 8;
             this.updShrinkContrastTimes.Value = new decimal(new int[] {
-            5,
+            3,
             0,
             0,
             0});
@@ -677,10 +664,19 @@
             this.updShrinkTimes.Size = new System.Drawing.Size(64, 20);
             this.updShrinkTimes.TabIndex = 8;
             this.updShrinkTimes.Value = new decimal(new int[] {
-            1,
+            2,
             0,
             0,
             0});
+            // 
+            // gaugeProgressBar1
+            // 
+            this.gaugeProgressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gaugeProgressBar1.Label = "waiting";
+            this.gaugeProgressBar1.Location = new System.Drawing.Point(75, 0);
+            this.gaugeProgressBar1.Name = "gaugeProgressBar1";
+            this.gaugeProgressBar1.Size = new System.Drawing.Size(436, 27);
+            this.gaugeProgressBar1.TabIndex = 2;
             // 
             // MainForm
             // 

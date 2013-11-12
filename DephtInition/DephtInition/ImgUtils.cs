@@ -20,148 +20,7 @@ using System.Drawing.Imaging;
 
 namespace DepthInition
 {
-    class FloatMap
-    {
-        int _w = -1, _h = -1, _stride = 0;
-        float[] _buf = null;
-
-        public int W { get { return _w; } }
-        public int H { get { return _h; } }
-        public int Stride { get { return _stride; } }
-        
-        public int LineStart(int y)
-        {
-            return y * _stride;
-        }
-
-        public FloatMap(int w, int h)
-        {
-            _w = w;
-            _h = h;
-            _stride = _w;
-            _buf = new float[_stride*_h];
-        }
-
-        public float this[int linearX]
-        {
-            get { return _buf[linearX]; }
-            set { _buf[linearX] = value; }
-        }
-
-        public float this[int x, int y]
-        {
-            get
-            {
-                return _buf[x + (y *_stride)];
-            }
-
-            set
-            {
-                _buf[x + (y * _stride)] = value;
-            }
-        }
-
-        public float this[float x, float y]
-        {
-            get 
-            {
-                // linear interpolation
-
-                int intX = (int)x;
-                int intY = (int)y;
-                int nextX = intX + 1;
-                int nextY = intY + 1;
-
-                int wl = _w - 1;
-                int hl = _h - 1;
-
-                if (nextX > wl) nextX = wl;
-                if (nextY > hl) nextY = hl;
-
-                float fracX = x - intX;
-                float fracY = y - intY;
-                float nFracX = 1 - fracX;
-
-                return (this[intX, intY] * nFracX + this[nextX, intY] * fracX) * (1 - fracY) +
-                        (this[intX, nextY] * nFracX + this[nextX, nextY] * fracX) * fracY;
-            }
-        }
-    }
-
-    class FloatMap2Aligned
-    {
-        int _w = -1, _h = -1, _stride = 0, _strideBits = 0;
-        float[] _buf = null;
-
-        public int W { get { return _w; } }
-        public int H { get { return _h; } }
-        public int Stride { get { return _stride; } }
-        public int StrideBits { get { return _strideBits; } }
-
-        public int LineStart(int y)
-        {
-            return y << _strideBits;
-        }
-
-        public FloatMap2Aligned(int w, int h)
-        {
-            _w = w;
-            _h = h;
-            _strideBits = lowestGreater2Pow(_w);
-            _stride = 1 << _strideBits;
-            _buf = new float[_stride * _h];
-        }
-
-        private int lowestGreater2Pow(int x)
-        {
-            int i = 0;
-            while (x > 0)
-            {
-                x >>= 1;
-                ++i;
-            }
-
-            return i;
-        }
-
-        public float this[int linearX]
-        {
-            get { return _buf[linearX]; }
-            set { _buf[linearX] = value; }
-        }
-
-        public float this[int x, int y]
-        {
-            get
-            {
-                return _buf[x + (y << _strideBits)];
-            }
-
-            set
-            {
-                _buf[x + (y << _strideBits)] = value;
-            }
-        }
-
-        public float this[float x, float y]
-        {
-            get
-            {
-                // linear interpolation
-
-                int intX = (int)x;
-                int intY = (int)y;
-                float fracX = x - intX;
-                float fracY = y - intY;
-                float nFracX = 1 - fracX;
-
-                return (this[intX, intY] * nFracX + this[intX + 1, intY] * fracX) * (1 - fracY) +
-                        (this[intX, intY + 1] * nFracX + this[intX + 1, intY + 1] * fracX) * fracY;
-            }
-        }
-    }
-
-    class MapUtils
+    class MapUtils : IDIMapComputer
     {
         // Computes some sort of resolution independant contrast defined as follows
         // (don't know yet if it's ok or not)
@@ -170,7 +29,7 @@ namespace DepthInition
         // original size and accumulates in original input map. Repeat several times.
         // Arguably, it could be computed more efficiently, but i don't care 
         // optimizing code that will still have to be changed several times.
-        public static FloatMap GetMultiResContrastEvaluation(FloatMap imgfIn, int subSamples)
+        public FloatMap GetMultiResContrastEvaluation(FloatMap imgfIn, int subSamples)
         {
             int h = imgfIn.H;
             int w = imgfIn.W;
@@ -180,7 +39,7 @@ namespace DepthInition
             var img = imgfIn;
             for (int i = 0; i < subSamples; ++i)
             {
-                var rc = ResizeMap(FastBlurMap(GetContrastMap(img)), w, h);
+                var rc = ResizeMap(QuickBlurMap(GetContrastMap(img)), w, h);
                 //var rc = DoubleImg(BlurImg(GetContrImg(img)), i); // <-- multi step reduction would still be first choice with openCl
                 Accumulate(contr, rc, k);
                 k *= 0.5f;
@@ -189,17 +48,19 @@ namespace DepthInition
             return contr;
         }
 
-        // Resizes map to arbitrary size
-        private static FloatMap ResizeMap(FloatMap imgfIn, int dstW, int dstH)
+        // Resizes map to arbitrary size (but it's better suited to upscale)
+        public FloatMap ResizeMap(FloatMap imgfIn, int dstW, int dstH)
         {
             int srcH = imgfIn.H;
             int srcW = imgfIn.W;
-            int stride = imgfIn.Stride;
 
-            float xk = srcW / dstW;
-            float yk = srcH / dstH;
+            float xk = (float)srcW / (float)dstW;
+            float yk = (float)srcH / (float)dstH;
 
             FloatMap imgOut = new FloatMap(dstW, dstH);
+
+            int stride = imgOut.Stride;
+
             float dy = 0;
             int lineStart = 0;
             for (int y = 0; y < dstH; ++y)
@@ -221,7 +82,7 @@ namespace DepthInition
 
         // Sets each pixel P in accumulation map to PValue + QValue, 
         // where Q is corresponding pixel in the other provided map
-        public static void Accumulate(FloatMap imgfInAccu, FloatMap imgfIn, float k)
+        public void Accumulate(FloatMap imgfInAccu, FloatMap imgfIn, float k)
         {
             int h = imgfInAccu.H;
             int w = imgfInAccu.W;
@@ -238,7 +99,7 @@ namespace DepthInition
                 var i = lineStart;
                 for (int x = 0; x < w; ++x)
                 {
-                    imgfInAccu[i] = imgfInAccu[i] + imgfIn[i] * k; 
+                    imgfInAccu[i] = imgfInAccu[i] + imgfIn[i] * k;
                     i += 1;
                 }
                 lineStart += stride;
@@ -247,7 +108,7 @@ namespace DepthInition
 
         // Returns maximum value in a map;
         // used to show normalized bitmaps
-        public static float GetMapMax(FloatMap imgfIn) 
+        public float GetMapMax(FloatMap imgfIn)
         {
             int h = imgfIn.H;
             int w = imgfIn.W;
@@ -255,7 +116,7 @@ namespace DepthInition
 
             float max = float.MinValue;
             float min = float.MaxValue;
-            
+
             int lineStart = 0;
             for (int y = 0; y < h; ++y)
             {
@@ -267,7 +128,7 @@ namespace DepthInition
                     {
                         max = v;
                     }
-                    
+
                     // debug only
                     if ((v > 0) && (v < min))
                     {
@@ -279,7 +140,7 @@ namespace DepthInition
                 lineStart += stride;
             }
 
-            Console.WriteLine("\n\nmin: {0}\nmax: {1}\n\n", min, max);
+            //Console.WriteLine("\n\nmin: {0}\nmax: {1}\n\n", min, max);
 
             return max;
         }
@@ -288,7 +149,7 @@ namespace DepthInition
         //  for each pixel C of input image (but borders) 
         //      for each pixel N of center's neighborhood
         //          accumulate |C-P| * W where W is a weight depending on distance between C and N
-        public static FloatMap GetContrastMap(FloatMap imgfIn)
+        public FloatMap GetContrastMap(FloatMap imgfIn)
         {
             const float k1 = 0.104167f;
             const float k2 = 0.145833f;
@@ -319,7 +180,7 @@ namespace DepthInition
 
         // Returns an image which sizes are each 1/2^times the original value;
         // will be probably replaced with reduction/expansion-style OpenCl operation
-        public static FloatMap HalfMap(FloatMap imgfIn, int times)
+        public FloatMap HalfMap(FloatMap imgfIn, int times)
         {
             for (int i = 0; i < times; ++i)
             {
@@ -330,7 +191,7 @@ namespace DepthInition
 
         // Returns an image which sizes are each half the original value;
         // will be probably replaced with reduction/expansion-style OpenCl operation
-        public static FloatMap HalfMap(FloatMap imgfIn)
+        public FloatMap HalfMap(FloatMap imgfIn)
         {
             int h = imgfIn.H;
             int w = imgfIn.W;
@@ -338,7 +199,7 @@ namespace DepthInition
 
             int hh = h >> 1;
             int hw = w >> 1;
-            
+
             var imgfOut = new FloatMap(hw, hh);
 
             int hStride = imgfOut.Stride;
@@ -364,7 +225,7 @@ namespace DepthInition
         // Returns an image which sizes are each 2^times the original value;
         // will be probably replaced with reduction/expansion-style
         // OpenCl operation
-        public static FloatMap DoubleMap(FloatMap imgfIn, int times)
+        public FloatMap DoubleMap(FloatMap imgfIn, int times)
         {
             for (int i = 0; i < times; ++i)
             {
@@ -376,11 +237,11 @@ namespace DepthInition
         // returns an image which sizes are each double the original value;
         // will be probably replaced with reduction/expansion-style
         // OpenCl operation
-        public static FloatMap DoubleMap(FloatMap imgfIn)
+        public FloatMap DoubleMap(FloatMap imgfIn)
         {
             int h = imgfIn.H;
             int w = imgfIn.W;
-            
+
             int dh = h * 2;
             int dw = w * 2;
 
@@ -410,7 +271,7 @@ namespace DepthInition
         // should be modified in order to use a true gaussian kernel;
         // is left as is because shortly all convolution-like functions
         // will be handled by a single method (possibly with OpenCL)
-        public static FloatMap FastBlurMap(FloatMap imgfIn)
+        public FloatMap QuickBlurMap(FloatMap imgfIn)
         {
             int h = imgfIn.H;
             int w = imgfIn.W;
@@ -429,7 +290,7 @@ namespace DepthInition
                 for (int x = 1; x < w - 1; ++x)
                 {
                     imgfOut[i] = (imgfIn[i]) * k1 +
-                                    (imgfIn[i + stride] + imgfIn[i - stride] + imgfIn[i+1] + imgfIn[i-1]) * k2 +
+                                    (imgfIn[i + stride] + imgfIn[i - stride] + imgfIn[i + 1] + imgfIn[i - 1]) * k2 +
                                     (imgfIn[i + stride + 1] + imgfIn[i + stride - 1] + imgfIn[i - stride + 1] + imgfIn[i - stride - 1]) * k3;
                     ++i;
                 }
@@ -439,7 +300,7 @@ namespace DepthInition
         }
 
         // Converts from bitmap 32bpp ARGB to float map
-        public static FloatMap Bmp2Map(Bitmap bmp)
+        public FloatMap Bmp2Map(Bitmap bmp)
         {
             var w = bmp.Width;
             var h = bmp.Height;
@@ -468,10 +329,10 @@ namespace DepthInition
                 {
                     int dstIdx = dstLineStart;
                     int wb = w * pixelSize;
-                    for (int x = 0; x < wb; x+=pixelSize)
+                    for (int x = 0; x < wb; x += pixelSize)
                     {
                         // considers Y component; in future, it would be nice to let user choose between single channels, luma, average, ...
-                        imgf[dstIdx] = getLuminosity(srcRow[x + 0], srcRow[x + 1], srcRow[x + 2]); // +3 is alpha
+                        imgf[dstIdx] = getLuminance(srcRow[x + 0], srcRow[x + 1], srcRow[x + 2]); // +3 is alpha
                         ++dstIdx;
                     }
                     dstLineStart += stride;
@@ -481,7 +342,7 @@ namespace DepthInition
 
             bmp.UnlockBits(srcData);
 
-            if (tmp == null)
+            if (tmp != null)
             {
                 tmp.Dispose(); // disposing our cloned copy... caller is responsible to dispose original bmp
             }
@@ -490,7 +351,7 @@ namespace DepthInition
         }
 
         // Converts from float map to bitmap 32bpp ARGB
-        public static Bitmap Map2Bmp(FloatMap imgf, float k)
+        public Bitmap Map2Bmp(FloatMap imgf, float k)
         {
             int h = imgf.H;
             int w = imgf.W;
@@ -511,7 +372,7 @@ namespace DepthInition
                 {
                     int srcIdx = srcLineStart;
                     int wb = w * pixelSize;
-                    for (int x = 0; x < wb; x+=pixelSize)
+                    for (int x = 0; x < wb; x += pixelSize)
                     {
                         byte b = (byte)(imgf[srcIdx] * k);
                         dstRow[x] = b;
@@ -530,7 +391,7 @@ namespace DepthInition
         }
 
         // Creates the blue-red depth map
-        public static Bitmap Map2BmpDepthMap(FloatMap imgf, float k, int count)
+        public Bitmap Map2BmpDepthMap(FloatMap imgf, float k, int count)
         {
             int h = imgf.H;
             int w = imgf.W;
@@ -551,7 +412,7 @@ namespace DepthInition
                 {
                     int srcIdx = srcLineStart;
                     int wb = w * pixelSize;
-                    for (int x = 0; x < wb; x+=4)
+                    for (int x = 0; x < wb; x += 4)
                     {
                         float v = imgf[srcIdx];
                         v = v < 0 ? -1 : 255 - v * 255 / count;
@@ -583,7 +444,7 @@ namespace DepthInition
         }
 
         // Returns Y component
-        static float getLuminosity(byte r, int g, int b)
+        float getLuminance(byte r, int g, int b)
         {
             return 0.299f * r + 0.587f * g + 0.114f * b;
         }
@@ -591,8 +452,7 @@ namespace DepthInition
         // This is some sort of median filter, with the difference that
         // "outlier" values are just invalidated and left
         // for another step to be replaced with appropriate value
-        // (this additional interpolation step still doesn't exist, though)
-        public static FloatMap SpikesFilter(FloatMap imgfIn, float treshold)
+        public FloatMap SpikesFilter(FloatMap imgfIn, float treshold)
         {
             int h = imgfIn.H;
             int w = imgfIn.W;
@@ -600,12 +460,12 @@ namespace DepthInition
 
             var imgfOut = new FloatMap(w, h);
 
-            const float k = 0.70710678118654752440084436210485f; // w = 1/sqrt(2); lazy me, i just compied result of w/wtot from calc... i know we don't have that much detail in singles
+            const float k = 0.70710678118654752440084436210485f; // w = 1/sqrt(2); lazy me, i just copied result of w/wtot from calc... i know we don't have that much detail in singles
 
             // TODO: Should handle -1s correctly here, sooner or later XD
 
             // copy borders directly from src to dst
-            int yLin = (h-1) * stride;
+            int yLin = (h - 1) * stride;
             for (int x = 0; x < w; ++x)
             {
                 imgfOut[x] = imgfIn[x];
@@ -634,7 +494,7 @@ namespace DepthInition
                 int i = lineStart + 1; ;
                 for (int x = 1; x < w - 1; ++x)
                 {
-                    neighborhoodWeight = 0; 
+                    neighborhoodWeight = 0;
                     neighborhoodAccu = 0;
 
                     // considering neighborhood pixels separately to correctly handle -1s
@@ -660,7 +520,7 @@ namespace DepthInition
                         neighborhoodWeight += 1;
                     }
 
-                    v = imgfIn[i -1];
+                    v = imgfIn[i - 1];
                     if (v > 0)
                     {
                         neighborhoodAccu += v;
@@ -673,14 +533,14 @@ namespace DepthInition
                         neighborhoodAccu += v * k;
                         neighborhoodWeight += k;
                     }
-                    
-                    v = imgfIn[i + stride -1];
+
+                    v = imgfIn[i + stride - 1];
                     if (v > 0)
                     {
                         neighborhoodAccu += v * k;
                         neighborhoodWeight += k;
                     }
-                    
+
                     v = imgfIn[i - stride + 1];
                     if (v > 0)
                     {
@@ -711,7 +571,7 @@ namespace DepthInition
         // and won't be mantained "nice"
         // SpikesFilter doesn't just call GetSpike
         // for performance reasons, too
-        public static float GetSpikeHeight(FloatMap imgfIn, int x, int y)
+        public float GetSpikeHeight(FloatMap imgfIn, int x, int y)
         {
             const float k = 0.70710678118654752440084436210485f; // w = 1/sqrt(2); lazy me, i just compied result of w/wtot from calc... i know we don't have that much detail in singles
 
@@ -723,7 +583,7 @@ namespace DepthInition
 
             int i = y * stride + x;
 
-            
+
             float neighborhoodWeight = 0;
             float neighborhoodAccu = 0;
             float v;
@@ -793,22 +653,23 @@ namespace DepthInition
         // Caps holes taking values (weighted by distance) from neighborhood
         // for interpolation; filter can cap holes as large as filterHalfSize*2;
         // multiple passes could be needed.
-        public static FloatMap CapHoles(FloatMap imgfIn, int filterHalfSize)
+        public FloatMap CapHoles(FloatMap imgfIn, int filterHalfSize)
         {
+            var mask = getDistanceWeightMap(filterHalfSize);
             bool thereAreStillHoles = true;
             while (thereAreStillHoles)
             {
-                imgfIn = MapUtils.capHoles(imgfIn, filterHalfSize, out thereAreStillHoles);
+                imgfIn = convolvec(imgfIn, mask, out thereAreStillHoles);
             }
             return imgfIn;
         }
 
-        static FloatMap capHoles(FloatMap imgfIn, int filterHalfSize, out bool thereAreStillHoles)
+        FloatMap capHoles(FloatMap imgfIn, int filterHalfSize, out bool thereAreStillHoles)
         {
-            return convolute(imgfIn, getDistanceWeightMap(filterHalfSize), out thereAreStillHoles);
+            return convolvec(imgfIn, getDistanceWeightMap(filterHalfSize), out thereAreStillHoles);
         }
 
-        static FloatMap convolute(FloatMap imgfIn, FloatMap filter, out bool thereAreStillHoles)
+        FloatMap convolvec(FloatMap imgfIn, FloatMap filter, out bool thereAreStillHoles)
         {
             thereAreStillHoles = false;
             int filterSize = filter.W;
@@ -819,7 +680,7 @@ namespace DepthInition
 
             var imgfOut = new FloatMap(w, h);
 
-            for (int y = 0; y < h ; ++y)
+            for (int y = 0; y < h; ++y)
             {
                 for (int x = 0; x < w; ++x)
                 {
@@ -835,7 +696,7 @@ namespace DepthInition
                         int cMinY = y - filterHalfSize;
                         int minX = Math.Max(0, cMinX);
                         int minY = Math.Max(0, cMinY);
-                        int xOffs = minX - cMinX; 
+                        int xOffs = minX - cMinX;
                         int yOffs = minY - cMinY;
                         int maxX = Math.Min(w, x + filterHalfSize);
                         int maxY = Math.Min(h, y + filterHalfSize);
@@ -865,23 +726,78 @@ namespace DepthInition
                     }
                     else
                     {
-                        imgfOut[x, y] = imgfIn[x,y];
+                        imgfOut[x, y] = imgfIn[x, y];
                     }
-                    
+
                 }
             }
 
             return imgfOut;
         }
 
-        public static FloatMap GaussianBlur(FloatMap imgfIn, float sigma)
+        FloatMap convolve(FloatMap imgfIn, FloatMap filter)
         {
-            FloatMap blurMask = createBlurMask(sigma);
-            bool dummy;
-            return convolute(imgfIn, blurMask, out dummy);
+            int filterSize = filter.W;
+            int filterHalfSize = filterSize / 2;
+
+            int h = imgfIn.H;
+            int w = imgfIn.W;
+
+            var imgfOut = new FloatMap(w, h);
+
+            for (int y = 0; y < h; ++y)
+            {
+                for (int x = 0; x < w; ++x)
+                {
+                    // if point in [x,y] == -1 then cap that:
+                    // foreach a,b from x-filtersize to x+filtersize (same for y)
+                    // if that point is != -1 accumulate that * weight[a,b], accumulate weight[a,b]
+
+                    float accu = 0;
+                    float wAccu = 0;
+                    int cMinX = x - filterHalfSize;
+                    int cMinY = y - filterHalfSize;
+                    int minX = Math.Max(0, cMinX);
+                    int minY = Math.Max(0, cMinY);
+                    int xOffs = minX - cMinX;
+                    int yOffs = minY - cMinY;
+                    int maxX = Math.Min(w, x + filterHalfSize);
+                    int maxY = Math.Min(h, y + filterHalfSize);
+                    for (int b = minY, fb = yOffs; b < maxY; ++b, ++fb)
+                    {
+                        for (int a = minX, fa = xOffs; a < maxX; ++a, ++fa)
+                        {
+                            float v = imgfIn[a, b];
+                            if (v >= 0)
+                            {
+                                float weight = filter[fa, fb];
+                                wAccu += weight;
+                                accu += v * weight;
+                            }
+                        }
+                    }
+
+                    if (wAccu != 0)
+                    {
+                        imgfOut[x, y] = accu / wAccu;
+                    }
+                    else
+                    {
+                        imgfOut[x, y] = -1;
+                    }
+                }
+            }
+
+            return imgfOut;
         }
 
-        private static FloatMap getDistanceWeightMap(int filterHalfSize)
+        public FloatMap GaussianBlur(FloatMap imgfIn, float sigma)
+        {
+            FloatMap blurMask = createBlurMask(sigma);
+            return convolve(imgfIn, blurMask);
+        }
+
+        private FloatMap getDistanceWeightMap(int filterHalfSize)
         {
             int size = filterHalfSize * 2 + 1;
             int sup = size - 1;
@@ -892,7 +808,7 @@ namespace DepthInition
                 {
                     float dx = (filterHalfSize - x);
                     float dy = (filterHalfSize - y);
-                    wMap[x, y] = wMap[y, sup - x] = wMap[sup - y, x] = wMap[sup - x, sup - y] = (float)(1.0/Math.Sqrt(dx * dx + dy * dy));
+                    wMap[x, y] = wMap[y, sup - x] = wMap[sup - y, x] = wMap[sup - x, sup - y] = (float)(1.0 / Math.Sqrt(dx * dx + dy * dy));
                 }
             }
 
@@ -903,7 +819,7 @@ namespace DepthInition
 
         // http://www.thebigblob.com/gaussian-blur-using-opencl-and-the-built-in-images-textures/
         // http://haishibai.blogspot.it/2009/09/image-processing-c-tutorial-4-gaussian.html
-        static FloatMap createBlurMask(float sigma)
+        FloatMap createBlurMask(float sigma)
         {
             int maskSize = (int)Math.Ceiling(3.0f * sigma);
             int _2maskSizePlus1 = (maskSize << 1) + 1; // stupid C# compiler gives precedence to sum
@@ -921,7 +837,7 @@ namespace DepthInition
                     mask[a + maskSize + (b + maskSize) * _2maskSizePlus1] = temp;
                 }
             }
-            
+
             // Normalize the mask
             int _2maskSizePlus1Sqr = _2maskSizePlus1 * _2maskSizePlus1;
             for (int i = 0; i < _2maskSizePlus1Sqr; ++i)
@@ -930,6 +846,11 @@ namespace DepthInition
             }
 
             return mask;
+        }
+
+        public void Dispose()
+        {
+            //...
         }
     }
 }
