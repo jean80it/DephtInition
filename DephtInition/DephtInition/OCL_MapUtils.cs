@@ -496,7 +496,7 @@ namespace DepthInition
         }
 
         // Creates the blue-red depth map; Still the simple one
-        public Bitmap Map2BmpDepthMap(FloatMap imgf, float k, int count)
+        public Bitmap Map2BmpFauxColors(FloatMap imgf, float k, int count)
         {
             int h = imgf.H;
             int w = imgf.W;

@@ -12,12 +12,12 @@ namespace DepthInition
         FloatMap GetContrastMap(FloatMap imgfIn);
         FloatMap HalfMap(FloatMap imgfIn, int times);
         FloatMap HalfMap(FloatMap imgfIn);
-        FloatMap DoubleMap(FloatMap imgfIn, int times);
-        FloatMap DoubleMap(FloatMap imgfIn);
+        //FloatMap DoubleMap(FloatMap imgfIn, int times);
+        //FloatMap DoubleMap(FloatMap imgfIn);
         FloatMap QuickBlurMap(FloatMap imgfIn);
         FloatMap Bmp2Map(Bitmap bmp);
         Bitmap Map2Bmp(FloatMap imgf, float k);
-        Bitmap Map2BmpDepthMap(FloatMap imgf, float k, int count);
+        Bitmap Map2BmpFauxColors(FloatMap imgf, float k, int count);
         FloatMap SpikesFilter(FloatMap imgfIn, float treshold);
         FloatMap CapHoles(FloatMap imgfIn, int filterHalfSize);
         FloatMap GaussianBlur(FloatMap imgfIn, float sigma);

@@ -174,7 +174,7 @@ namespace DepthInition
                 _showRGBForm.DisplayedBitmap = new Bitmap(_fileNames[_displayedBmpIdx]);
                 this.Text = string.Format("displaying image {0}/{1}", _displayedBmpIdx, _fileNames.Length - 1);
 
-                using (IDIMapComputer mapCmp = _useCl ? (IDIMapComputer)new OCL_MapUtils() : (IDIMapComputer)new MapUtils())
+                using (IDIMapComputer mapCmp = _useCl ? (IDIMapComputer)new OCL_MapUtils_img() : (IDIMapComputer)new MapUtils())
                 {
                     float max = mapCmp.GetMapMax(_imgfs[_displayedBmpIdx]);
                     _showContrForm.DisplayedBitmap = mapCmp.Map2Bmp(_imgfs[_displayedBmpIdx], 255.0f / max);
@@ -415,7 +415,7 @@ namespace DepthInition
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            using (IDIMapComputer mapCmp = _useCl ? (IDIMapComputer)new OCL_MapUtils() : (IDIMapComputer)new MapUtils())
+            using (IDIMapComputer mapCmp = _useCl ? (IDIMapComputer)new OCL_MapUtils_img() : (IDIMapComputer)new MapUtils())
             {
                 // for each selected file 
                 for (int fileIdx = 0; fileIdx < fileCount; ++fileIdx)
@@ -750,9 +750,9 @@ namespace DepthInition
                 {
                     DisplayedBmpIdx = 0;
 
-                    using (IDIMapComputer mapCmp = _useCl ? (IDIMapComputer)new OCL_MapUtils() : (IDIMapComputer)new MapUtils())
+                    using (IDIMapComputer mapCmp = _useCl ? (IDIMapComputer)new OCL_MapUtils_img() : (IDIMapComputer)new MapUtils())
                     {
-                        _showdepthForm.DisplayedBitmap = mapCmp.Map2BmpDepthMap(_maxMap, 1, _imgfs.Count);
+                        _showdepthForm.DisplayedBitmap = mapCmp.Map2BmpFauxColors(_maxMap, 1, _imgfs.Count);
                     }
                 }
                 catch { }

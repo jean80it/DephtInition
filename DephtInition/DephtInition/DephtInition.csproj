@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="FloatMap.cs" />
     <Compile Include="IDIMapComputer.cs" />
+    <Compile Include="ImgUtils_OCL_img.cs" />
     <Compile Include="OCL_MapUtils.cs" />
     <Compile Include="CurveFitUtils.cs" />
     <Compile Include="DblBufPanel.cs">
@@ -103,6 +104,9 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="MapUtils.cl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="MapUtilsImg.cl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
