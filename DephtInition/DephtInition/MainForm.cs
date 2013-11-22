@@ -85,6 +85,19 @@ namespace DepthInition
             _useCl = useCl;
         }
 
+        IDIMapComputer _mapComputer = null;
+        public IDIMapComputer MapComputer
+        {
+            get
+            {
+                if (_mapComputer == null)
+                {
+                    _mapComputer = _useCl ? (IDIMapComputer)new OCL_MapUtils_img() : (IDIMapComputer)new MapUtils();
+                }
+                return _mapComputer;
+            }
+        }
+
         void checkSpikes(object sender, MouseEventArgs e)
         {
             var typedSender = sender as Control;
@@ -174,11 +187,8 @@ namespace DepthInition
                 _showRGBForm.DisplayedBitmap = new Bitmap(_fileNames[_displayedBmpIdx]);
                 this.Text = string.Format("displaying image {0}/{1}", _displayedBmpIdx, _fileNames.Length - 1);
 
-                using (IDIMapComputer mapCmp = _useCl ? (IDIMapComputer)new OCL_MapUtils_img() : (IDIMapComputer)new MapUtils())
-                {
-                    float max = mapCmp.GetMapMax(_imgfs[_displayedBmpIdx]);
-                    _showContrForm.DisplayedBitmap = mapCmp.Map2Bmp(_imgfs[_displayedBmpIdx], 255.0f / max);
-                }
+                float max = MapComputer.GetMapMax(_imgfs[_displayedBmpIdx]);
+                _showContrForm.DisplayedBitmap = MapComputer.Map2Bmp(_imgfs[_displayedBmpIdx], 255.0f / max);
             }
         }
 
@@ -404,108 +414,104 @@ namespace DepthInition
             }
 
             _imgfs.Clear();
-            
+
             int fileCount = _fileNames.Length;
 
             float progressStep = 100.0f / (fileCount * 2.0f);
             float progress = 0;
 
-            backgroundWorker1.ReportProgress((int)progress,"converting");
+            backgroundWorker1.ReportProgress((int)progress, "converting");
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            using (IDIMapComputer mapCmp = _useCl ? (IDIMapComputer)new OCL_MapUtils_img() : (IDIMapComputer)new MapUtils())
+            // for each selected file 
+            for (int fileIdx = 0; fileIdx < fileCount; ++fileIdx)
             {
-                // for each selected file 
-                for (int fileIdx = 0; fileIdx < fileCount; ++fileIdx)
-                {
-                    string fileName = _fileNames[fileIdx];
+                string fileName = _fileNames[fileIdx];
 
-                    // load bitmap
-                    using (var _bmp = new Bitmap(fileName))
+                // load bitmap
+                using (var _bmp = new Bitmap(fileName))
+                {
+                    if (fileIdx == 0)
                     {
-                        if (fileIdx == 0)
+                        _h = _bmp.Height;
+                        _w = _bmp.Width;
+                    }
+                    else
+                    {
+
+                        if ((_h != _bmp.Height) || (_w != _bmp.Width))
                         {
-                            _h = _bmp.Height;
-                            _w = _bmp.Width;
+                            MessageBox.Show("Images must have same size!");
+                            return;
                         }
-                        else
-                        {
-
-                            if ((_h != _bmp.Height) || (_w != _bmp.Width))
-                            {
-                                MessageBox.Show("Images must have same size!");
-                                return;
-                            }
-                        }
-
-                        Bitmap sizedBmp = new Bitmap(_bmp, new Size(_bmp.Width / PreShrinkTimes,_bmp.Height / PreShrinkTimes));
-
-
-                        FloatMap imgf;
-
-                        // get luminance map
-                        imgf = mapCmp.Bmp2Map(sizedBmp);
-
-                        _imgfs.Add(imgf);
                     }
 
-                    // update and report progress
-                    progress += progressStep;
-                    backgroundWorker1.ReportProgress((int)progress);
+                    Bitmap sizedBmp = new Bitmap(_bmp, new Size(_bmp.Width / PreShrinkTimes, _bmp.Height / PreShrinkTimes));
 
-                    // check for cancellation
-                    if (backgroundWorker1.CancellationPending)
-                    {
-                        return;
-                    }
+
+                    FloatMap imgf;
+
+                    // get luminance map
+                    imgf = MapComputer.Bmp2Map(sizedBmp);
+
+                    _imgfs.Add(imgf);
                 }
 
-                List<FloatMap> newImgfs = new List<FloatMap>();
+                // update and report progress
+                progress += progressStep;
+                backgroundWorker1.ReportProgress((int)progress);
 
-                backgroundWorker1.ReportProgress((int)progress, "getting contrast");
-
-                // for each luminance map
-                foreach (var imgf in _imgfs)
+                // check for cancellation
+                if (backgroundWorker1.CancellationPending)
                 {
-                    // get contrast, then shrink result (averaging pixels)
-                    FloatMap newImgf = mapCmp.HalfMap(mapCmp.GetMultiResContrastEvaluation(imgf, MultiResSteps), ShrinkContrastTimes);
-
-                    newImgfs.Add(newImgf);
-
-                    // update and report progress
-                    progress += progressStep;
-                    backgroundWorker1.ReportProgress((int)progress);
-
-                    // check for cancellation
-                    if (backgroundWorker1.CancellationPending)
-                    {
-                        return;
-                    }
+                    return;
                 }
+            }
 
-                _imgfs = newImgfs;
+            List<FloatMap> newImgfs = new List<FloatMap>();
 
-                smoothDepth(); smoothDepth();
+            backgroundWorker1.ReportProgress((int)progress, "getting contrast");
 
-                _maxMap = getMaxMap();
+            // for each luminance map
+            foreach (var imgf in _imgfs)
+            {
+                // get contrast, then shrink result (averaging pixels)
+                FloatMap newImgf = MapComputer.HalfMap(MapComputer.GetMultiResContrastEvaluation(imgf, MultiResSteps), ShrinkContrastTimes);
 
-                // smooth
-                for (int i = 0; i < BlurTimes; ++i)
+                newImgfs.Add(newImgf);
+
+                // update and report progress
+                progress += progressStep;
+                backgroundWorker1.ReportProgress((int)progress);
+
+                // check for cancellation
+                if (backgroundWorker1.CancellationPending)
                 {
-                    _maxMap = mapCmp.GaussianBlur(_maxMap, BlurSigma);
+                    return;
                 }
+            }
 
-                // filter out spikes
-                _maxMap = mapCmp.SpikesFilter(_maxMap, SpikeFilterTreshold);
+            _imgfs = newImgfs;
 
-                // cap holes
-                _maxMap = mapCmp.CapHoles(_maxMap, CapHolesFilterEmisize);
+            smoothDepth(); smoothDepth();
 
-                // TODO: correct the bell-distorsion
-            
-            } // mapCmp scope;
+            _maxMap = getMaxMap();
+
+            // smooth
+            for (int i = 0; i < BlurTimes; ++i)
+            {
+                _maxMap = MapComputer.GaussianBlur(_maxMap, BlurSigma);
+            }
+
+            // filter out spikes
+            _maxMap = MapComputer.SpikesFilter(_maxMap, SpikeFilterTreshold);
+
+            // cap holes
+            _maxMap = MapComputer.CapHoles(_maxMap, CapHolesFilterEmisize);
+
+            // TODO: correct the bell-distorsion
 
             sw.Stop();
 
@@ -750,10 +756,7 @@ namespace DepthInition
                 {
                     DisplayedBmpIdx = 0;
 
-                    using (IDIMapComputer mapCmp = _useCl ? (IDIMapComputer)new OCL_MapUtils_img() : (IDIMapComputer)new MapUtils())
-                    {
-                        _showdepthForm.DisplayedBitmap = mapCmp.Map2BmpFauxColors(_maxMap, 1, _imgfs.Count);
-                    }
+                   _showdepthForm.DisplayedBitmap = MapComputer.Map2BmpFauxColors(_maxMap, 255.0f / (float)_imgfs.Count);
                 }
                 catch { }
                 gaugeProgressBar1.Label = "done";

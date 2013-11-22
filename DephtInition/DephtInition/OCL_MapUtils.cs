@@ -496,7 +496,7 @@ namespace DepthInition
         }
 
         // Creates the blue-red depth map; Still the simple one
-        public Bitmap Map2BmpFauxColors(FloatMap imgf, float k, int count)
+        public Bitmap Map2BmpFauxColors(FloatMap imgf, float k)
         {
             int h = imgf.H;
             int w = imgf.W;
@@ -520,8 +520,7 @@ namespace DepthInition
                     for (int x = 0; x < wb; x += 4)
                     {
                         float v = imgf[srcIdx];
-                        v = v < 0 ? -1 : 255 - v * 255 / count;
-
+                        
                         if (v >= 0)
                         {
                             byte b = (byte)Math.Min(255, Math.Max((v * k), 0));

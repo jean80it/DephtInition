@@ -667,7 +667,7 @@ namespace DepthInition
         }
 
         // copypasted/modified from Map2Bmp
-        public Bitmap Map2BmpFauxColors(FloatMap inMap, float k, int count) // have to deprecate use of count-->precomputed k
+        public Bitmap Map2BmpFauxColors(FloatMap inMap, float k)
         {
             var kernel = _kernels["mapToFauxColorsBmp"];
 
@@ -695,7 +695,7 @@ namespace DepthInition
             assert(err, "input img setKernelArg");
             err = Cl.SetKernelArg(kernel, 1, intPtrSize, outputImage2DBuffer);
             assert(err, "output img setKernelArg");
-            err = Cl.SetKernelArg(kernel, 2, floatSize, k/count);
+            err = Cl.SetKernelArg(kernel, 2, floatSize, k);
             assert(err, "k setKernelArg");
 
             Event clevent;
